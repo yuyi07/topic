@@ -1,0 +1,564 @@
+<html><head>
+		<style>
+		#info {
+			position: absolute;
+			top: 2%;
+			width: 100%;
+			padding: 10px;
+			text-align: center;
+			color: #ff0000;
+		}
+		  
+		body {
+			overflow: hidden;
+		}
+		
+		#topView {
+			position: absolute;
+			border-radius: 100px;
+			top: 86.5%;
+			left : 5%;
+		}
+		#thirdPV {
+			position: absolute;
+			border-radius: 100px;
+			top: 86.5%;
+			left : 15%;
+		}
+		  
+		#firstPV {
+			position: absolute;
+			border-radius: 100px;
+			top: 86.5%;
+			left : 25%;
+		}
+		</style>
+		</head>
+		
+		<body> 
+		<div id="info">auto parking -> stop parking -> manual<br>
+			<button id="parking"> auto parking</button>
+			<button id="parkingModeButton"> Mode 1</button>
+		</div>
+		
+		<script src="https://threejs.org/build/three.min.js"></script>
+		<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script src="https://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
+		<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/MTLLoader.js"></script>
+		<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/OBJLoader.js"></script>
+
+		
+		<button id="topView"><img src ="https://i.imgur.com/96tj0yh.png?2" style="width:80px;height:80px;"></button>
+		<button id="thirdPV"><img src="https://i.imgur.com/OvvIh4R.png?2" style="width:80px;height:80px;"></button>
+		<button id="firstPV"><img src="https://i.imgur.com/AX5vRqY.png" style="width:80px;height:80px;"></button>
+		
+		<script src="build.js"></script>
+		
+		<script>
+			
+		
+		( function() {
+			Math.clamp = function(val,min,max) {
+				return Math.min(Math.max(val,min),max);
+			} 
+		})();
+		
+		var scene, renderer, camera;
+		var keyboard = new KeyboardState();
+		var clock = new THREE.Clock();
+
+		var car, obstacles = [];
+
+		var sceneHUD;
+		var topViewTurn = false, topControls, rearMirrorControls, reversingCameraControls;
+		var thirdPV = false, firstPV = false;
+		var parkingMode = 0, auto = 0 ,parkingModeButton = false;
+		var PPart = 0;
+		var modelName;
+		
+		//button
+		$("#topView").click(function() {
+			topViewTurn = !topViewTurn;
+		});
+		
+		$("#thirdPV").click(function() {
+			thirdPV = !thirdPV;
+			if(thirdPV)
+				firstPV = false;
+		});
+		
+		$("#firstPV").click(function() {
+			firstPV = !firstPV;
+			//console.log(firstPV);
+			if(firstPV)
+				thirdPV = false;
+		});
+		
+		$("#parking").click(function() {
+			parkingMode++;
+			if(parkingMode > 2) parkingMode = 0;
+			
+			if(parkingMode == 0){
+				$("#parking").text('auto parking');
+			}
+			else if(parkingMode == 1){
+				$("#parking").text('stop parking');
+			}
+			else if(parkingMode == 2){
+				$("#parking").text('manual');
+			}
+		
+		});
+		$("#parkingModeButton").click(function() {
+			parkingModeButton = !parkingModeButton;
+			if(parkingModeButton){
+				$("#parkingModeButton").text('Mode 2');
+				car.mesh.position.z = 30;
+			}
+
+			else{
+				$("#parkingModeButton").text('Mode 1');
+				car.mesh.position.z = 40;
+			}
+				
+		});
+		$("#auto").click(function() {
+			//auto = 1;
+			if(auto == 1) auto = 0;
+			if(auto == 0) auto = 1;
+		});
+		
+		init();
+		animate();
+		  
+		
+function init() {
+	scene = new THREE.Scene();
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor(0x888888);
+	document.body.appendChild(renderer.domElement);
+
+	camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+	camera.position.set(-200, 100, 0);
+	let controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+	var light = new THREE.HemisphereLight(0xffffff, 0x000000, 1);
+	light.position.set(0, 100, 0);
+	scene.add(light);
+	
+	//plane
+	let loader = new THREE.TextureLoader();
+	loader.crossOrigin = '';
+	texture = loader.load('https://i.imgur.com/uatNsoh.png');
+	texture.repeat.set(14, 14);
+	texture.wrapS = THREE.RepeatWrapping;
+	texture.wrapT = THREE.RepeatWrapping;
+	let plane = new THREE.Mesh(new THREE.PlaneGeometry(700, 260), 
+  	new THREE.MeshBasicMaterial({map: texture}))
+	scene.add(plane);
+	//plane.rotation.y = Math.PI;
+	plane.rotation.x = -Math.PI/2;
+	texture1 = loader.load('https://i.imgur.com/EB8HFqt.jpg?1');
+	
+	let plane1 = new THREE.Mesh(new THREE.PlaneGeometry(700, 120), 
+	  new THREE.MeshBasicMaterial({map: texture1}))
+	  texture1.repeat.set(3,1);
+	  texture1.wrapS = THREE.RepeatWrapping;
+	  texture1.wrapT = THREE.RepeatWrapping;
+	  plane1.rotation.x = -Math.PI/2;
+	  plane1.position.y = 0.2;
+
+	scene.add(plane1);
+	/*
+	var grid = new THREE.GridHelper (400,40,'red','white');
+	scene.add (grid);
+	const axesHelper = new THREE.AxesHelper( 25 );
+	scene.add( axesHelper );
+	*/
+	let texture3 = loader.load('https://i.imgur.com/cNqeEt2.png');
+	let trafficLight =  new THREE.Mesh(new THREE.PlaneGeometry(60, 60), 
+	  new THREE.MeshBasicMaterial({map: texture3, transparent:true}))
+	trafficLight.rotation.y = -Math.PI/2;
+	trafficLight.position.set(200, 25, -35);
+	scene.add(trafficLight);
+    ////////////////////////////////////////////////////////////
+	//car
+    car = buildCar(new THREE.Vector3(-50, 13, 40));//new THREE.Vector3(-50, 13, 0)); 
+    var car2 = buildCar(new THREE.Vector3(55, 13, 70));//new THREE.Vector3(66.5, 13, 29));
+	var car3 = buildCar(new THREE.Vector3(-55, 13, 70));//new THREE.Vector3(-66.5, 13, 29));
+
+	//readModel('mini-cooper');
+	obstacles.push(car2, car3);
+	let texture4 = loader.load('https://i.imgur.com/dKpYAbl.jpg');
+	//obstacles
+	let obs = new Obstacle(new THREE.Vector3(0, 7, 100), [300, 2, 20], 'texture4');
+	let obs2 = new Obstacle(new THREE.Vector3(0, 7, -100), [300, 2, 20], 'texture4');
+	//let obs3 = new Obstacle(new THREE.Vector3(199,20, -58), [.5, 23, .5], 'black');
+	obstacles.push(obs, obs2);
+	
+	
+	//light
+	var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+	scene.add( light );
+  
+    window.addEventListener('resize', onWindowResize, false);
+  
+    ////////////////////////////
+    RCmesh = new THREE.Mesh (new THREE.SphereGeometry(5,6,6), new THREE.MeshBasicMaterial());
+    scene.add(RCmesh);
+
+    //////////////////////////////////////////////
+    renderer.autoClear = false;
+	
+    //topCamera
+    sceneHUD = new THREE.Scene();
+    topCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    topCamera.position.set(-10, 390, 0);
+    cameraHUD = new THREE.OrthographicCamera(-10, 10, 10, -10, -10, 1000);
+    cameraHUD.position.z = 500;
+    topControls = new THREE.OrbitControls(topCamera, renderer.domElement);
+
+	//rear mirror
+	sceneHUD1 = new THREE.Scene();
+    rearMirror = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    rearMirror.position.set(-60, 23, 40);
+    cameraHUD1 = new THREE.OrthographicCamera(-10, 10, 10, -10, -10, 1000);
+    cameraHUD1.position.z = 500;
+	rearMirrorControls = new THREE.OrbitControls(rearMirror, renderer.domElement);
+	
+	//Reversing camera
+	sceneHUD2= new THREE.Scene();
+    reversingCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    reversingCamera.position.set(-60, 23, 40);
+    cameraHUD2 = new THREE.OrthographicCamera(-10, 10, 10, -10, -10, 1000);
+    cameraHUD2.position.z = 500;
+	reversingCameraControls = new THREE.OrbitControls(reversingCamera, renderer.domElement);
+	
+
+	//dashboard
+	dashboard = buildDashboard();
+	scene.add(dashboard);
+	dashboard.visible = false;
+
+    drawParkingSpace();
+	drawFrame();
+}
+  
+function onWindowResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+  
+function animate() {
+  
+    renderer.clear(true);
+    topControls.update();
+    topCamera.position.set(-10, 390, 0);
+    
+    keyboard.update();
+  
+    // 'static' variables  
+    this.speed = (this.speed === undefined) ? 0 : this.speed;
+	this.theta = (this.theta === undefined) ? 0.001 : this.theta;
+    this.fSlowDown = (this.fSlowDown === undefined) ? 0 : this.fSlowDown;
+    this.bSlowDown = (this.bSlowDown === undefined) ? 0 : this.bSlowDown;
+    this.LFW = (this.LFW === undefined) ? 0 : this.LFW;
+    this.RFW = (this.RFW === undefined) ? 0 : this.RFW;
+    this.LRW = (this.LRW === undefined) ? 0 : this.LRW;
+    this.RRW = (this.RRW === undefined) ? 0 : this.RRW;  
+  
+    /////////////////////////////////////////////////////////////////
+    //move car
+    if (keyboard.pressed('down')){
+		this.speed -= 1;
+		if(this.speed >= -50 & this.speed < 0)
+			dashboard.children[2].rotation.x += 0.04;
+	}
+	if (keyboard.pressed('up')){
+		this.speed += 1;
+		if(this.speed <= 50 & this.speed >= 0)
+			dashboard.children[2].rotation.x += 0.04;
+	}
+	this.speed = Math.clamp (this.speed, -50, 50);
+  
+    if (keyboard.pressed('right'))
+		this.theta -= 0.02;
+    if (keyboard.pressed('left'))
+		this.theta += 0.02;  
+    this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+    
+    car.leftfrontWheel.rotation.y = Math.atan(26/(26/Math.tan(this.theta)-8));
+    car.rightfrontWheel.rotation.y = Math.atan(26/(26/Math.tan(this.theta)+8));
+    
+	//let msg = `this.theta: ${this.theta}; speed: ${this.speed}`;
+	//console.log (msg);
+  
+    //////////////////////////////////////////////////////////////
+    
+    RC = car.mesh.localToWorld (new THREE.Vector3(-12,0,-24/Math.tan(this.theta)));
+    RCmesh.position.copy (RC);
+    
+    var omega = this.speed * Math.tan(this.theta)/24;
+    var deltaT = clock.getDelta();
+    
+    // C is the center of car body
+    let C = car.mesh.position;
+	let p = car.mesh.position;
+    var vv = C.clone().sub(RC).applyAxisAngle (new THREE.Vector3(0,1,0), omega*deltaT).add(RC);
+	
+	for(var i = 0;i < obstacles.length;i++){
+		if(obstacles[i].intersect(car)){    //intersect
+			i = -1;
+			break;
+		}
+	}
+	if(i >= 0){    
+		car.move(vv);
+		car.rotate(car.angle + omega*deltaT);
+	}
+	
+    //////////////////////////////////////////////////////////////
+    // slowing down    after keyboard up
+    //
+    if (keyboard.up("up")) 
+		this.fSlowDown = 1; 
+    else if (keyboard.up("down"))	
+		this.bSlowDown = 1;
+       
+    if (keyboard.down("up") ||  keyboard.down("down"))
+		this.fSlowDown = this.bSlowDown = 0;
+      
+		if (this.fSlowDown == 1) {
+		if(this.speed >= 0) {  // moving forward --> slow down gradually
+			this.speed -= 1;
+			dashboard.children[2].rotation.x -= 0.04;
+		} else if (this.speed <= 0) {  // moving backward --> stop immediately
+			this.speed = 0;
+			this.fSlowDown = 0;
+			dashboard.children[2].rotation.x = 0;
+		}
+    } else if (this.bSlowDown == 1) {
+		if(this.speed <= 0) {
+			this.speed += 1;
+			dashboard.children[2].rotation.x -= 0.04;
+		} else if (this.speed >= 0) {
+			this.speed = 0;
+			this.bSlowDown = 0;
+			dashboard.children[2].rotation.x = 0;
+		}
+    }
+	dashboard.visible = false;
+    //camera position
+    if (thirdPV) {
+		let carEnd = car.mesh.localToWorld (new THREE.Vector3(-10,0,0));
+		camera.lookAt (carEnd);
+		camera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-50,30,0)));
+    } 
+    else if(firstPV){
+		var tmp = car.mesh.localToWorld(new THREE.Vector3(1, 10, 0));
+		camera.position.copy(tmp);
+		tmp = car.mesh.localToWorld(new THREE.Vector3(6, 10, 0));
+		camera.lookAt(tmp);
+		//rear mirror
+		let carEnd = car.mesh.localToWorld (new THREE.Vector3(-10, 0, 0));
+		rearMirror.lookAt(carEnd);
+		rearMirror.position.copy (car.mesh.localToWorld (new THREE.Vector3 (6,10,3)));
+
+		//
+		if(this.speed < 0){
+			let carEnd = car.mesh.localToWorld (new THREE.Vector3(-30, 0, 0));
+			reversingCamera.lookAt(carEnd);
+			reversingCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-10,0,0)));
+			console.log(reversingCamera.position);
+
+		}
+
+
+		dashboard.visible = true;
+		dashboard.position.copy(tmp);
+		dashboard.position.y -= 2;
+		dashboard.rotation.y = car.angle;
+		dashboard.children[0].rotation.z = this.theta * -10;
+    }
+    else {
+		camera.position.set(-200, 100, 0); // fixed camera, no orbitControl!
+		camera.lookAt(new THREE.Vector3(0, 0, 0));
+    }
+
+    //parking 
+	//parkingMode 0 manual 1 auto parking 2 stop parking
+	//PPart 0 go straight 1 turn right 2 change direction 3 turn left
+    if(parkingMode == 1 && parkingModeButton == false){            //auto parking Mode 1
+		if(PPart == 0){             //go straight
+			this.speed += 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			if(car.mesh.position.x >= 65){
+				PPart = 1;
+				this.speed = 0;
+			}
+		}
+		if(PPart == 1){             //turn right
+			this.speed -= 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			this.theta -= 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(car.angle >= Math.PI /4){
+				PPart = 2;
+			}
+		}
+		if(PPart == 2){             //change direction
+			this.speed = 0;
+			this.theta += 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(this.theta == Math.PI/7){
+				PPart = 3;
+			}
+		}
+		if(PPart == 3){             //turn left
+			this.speed -= 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			this.theta += 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(car.angle <= 0){
+				this.speed = 0;
+			}
+		}
+	}else if(parkingMode == 1 && parkingModeButton == true){            //auto parking Mode 2
+		if(PPart == 0){             //go straight
+			this.speed += 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			if(car.mesh.position.x >= 70){
+				PPart = 1;
+				this.speed = 0;
+			}
+		}
+		if(PPart == 1){             //turn right
+			this.speed -= 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			this.theta -= 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(car.angle >= Math.PI /4){
+				PPart = 2;
+			}
+		}
+		if(PPart == 2){             //change direction
+			this.speed = 0;
+			this.theta += 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(this.theta >= 0){
+				PPart = 3;
+			}
+		}
+		if(PPart == 3){             //go straight backward
+			this.speed  -= 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			if(car.mesh.position.z >= 45){
+				this.speed = 0;
+				PPart = 4;
+			}
+		}
+		if(PPart == 4){             //change direction
+			this.speed = 0;
+			this.theta += 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(this.theta == Math.PI/7){
+				PPart = 5;
+			}
+		}
+		if(PPart == 5){             //turn left
+			this.speed -= 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			this.theta += 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(car.angle <= 0){
+				this.speed = 0;
+				PPart = 6
+			}
+		}
+		if(PPart == 6){             //change direction
+			this.speed = 0;
+			this.theta -= 0.02;
+			this.theta = Math.clamp (this.theta, -Math.PI/7, Math.PI/7);
+			if(this.theta <= 0){
+				PPart = 7;
+			}
+		}
+		if(PPart == 7){             //go straight forward
+			this.speed  += 1;
+			this.speed = Math.clamp (this.speed, -50, 50);
+			if(car.mesh.position.x >= 0){
+				this.speed = 0;
+				
+			}
+		}
+    }
+	else if(parkingMode === 2){     //stop parking
+		this.speed = 0;
+	}else {                          //manual
+		PPart = 0;
+	}
+
+	
+		  
+    /////////////////////////////////////////////
+    // purely cosmetic ...    wheel turn
+    this.LFW += this.speed*deltaT/5;
+    this.RFW += this.speed*deltaT/5;
+    this.LRW += this.speed*deltaT/5;
+    this.RRW += this.speed*deltaT/5;
+  
+    car.leftfrontWheel.rotation.z = this.LFW;
+    car.rightfrontWheel.rotation.z = this.RFW;
+    car.leftRearWheel.rotation.z = this.LRW;
+    car.rightRearWheel.rotation.z = this.RRW;
+  
+    requestAnimationFrame(animate);
+    render();
+    
+}
+  
+function render() {
+ 
+	var WW = window.innerWidth;
+	var HH = window.innerHeight;
+    renderer.setScissorTest( true );
+
+    renderer.setViewport(0, 0, WW, HH);
+    renderer.setScissor(0, 0, WW, HH);
+    renderer.clear();
+    renderer.render(scene, camera);
+
+    if (topViewTurn) {
+		renderer.render(sceneHUD, cameraHUD);
+		renderer.setViewport(WW/1.43, HH/1.41, WW/3.5, HH/3.5);
+		renderer.setScissor(WW/1.43, HH/1.41, WW/3.5, HH/3.5);
+		renderer.clear();
+		renderer.render(scene, topCamera);
+	}
+	if(firstPV){
+		renderer.render(sceneHUD1, cameraHUD1);
+		renderer.setViewport(WW/1.43, HH/1.44, WW/3.5, HH/7.3);
+		renderer.setScissor(WW/1.43, HH/1.44, WW/3.5, HH/7.3);
+		renderer.clear();
+		renderer.render(scene, rearMirror);
+
+		//reversing Camera
+		if(this.speed < 0){
+			renderer.render(sceneHUD2, cameraHUD2);
+			renderer.setViewport(WW/1.43, HH/1.44, WW/7.5, HH/7.4);
+			renderer.setScissor(WW/1.43, HH/1.44, WW/7.5, HH/7.4);
+			renderer.clear();
+			renderer.render(scene, reversingCamera);			
+		}
+
+
+
+	}
+	renderer.setScissorTest( false );
+}
+</script>
+</body>
+</html>
