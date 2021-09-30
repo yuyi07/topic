@@ -1,18 +1,5 @@
 function buildScenes(){
 	//ground
-	
-	var shape = new THREE.Shape(); 
-	shape.moveTo(-300, -400);
-	shape.lineTo(300, -400);
-	shape.lineTo(300, 400);
-	shape.lineTo(-300, 400);
-	shape.lineTo(-300, -400);
-
-	var extrudeSettings = {
-		steps: 1,
-		depth: 1,
-		bevelEnabled: false,
-	};
 
 	let loader = new THREE.TextureLoader()
 	loader.setCrossOrigin ("")
@@ -27,8 +14,9 @@ function buildScenes(){
 	scene.add( ground );
 
 /////////////////////////////////////////  sidewalk  //////////////////////////////////////////////////
-	let map1 = loader.load ("https://i.imgur.com/dKpYAbl.jpg?2")
-
+	let map1 = loader.load ("https://i.imgur.com/KIQL2BB.jpg")
+	map1.wrapS = map1.wrapT = THREE.WrapRepeating
+	map1.repeat.set (.05,.05)
 	var length = 108, width = 291;
 	var rr = 5;
 
@@ -60,9 +48,9 @@ function buildScenes(){
 	var material = new THREE.MeshLambertMaterial({
 		color: 0x888888,//0x6b6b6b
 		polygonOffset: true,
-		polygonOffsetFactor: -1,
-		polygonOffsetUnits: -1,
-		//map:map1,
+		polygonOffsetFactor: -2,
+		polygonOffsetUnits: -2,
+		map:map1,
 		side:THREE.DoubleSide
 	});
 	var sidewalk1 = new THREE.Mesh(geometry, material);
@@ -204,10 +192,11 @@ function buildScenes(){
 
 
 	const sideWalkGeometry = new THREE.BoxGeometry( 3, 1.5, 163 );
-	const sideWalkMaterial = new THREE.MeshLambertMaterial( {color: 0x888888,
+	const sideWalkMaterial = new THREE.MeshLambertMaterial( {color: 0x6e6f71,
 		polygonOffset: true,
 		polygonOffsetFactor: -1,
 		polygonOffsetUnits: -1,
+	
 	} );
 	const  sidewalk7 = new THREE.Mesh( sideWalkGeometry, sideWalkMaterial );
 	sidewalk7.position.set(150.5, 0.75, -245);
@@ -231,8 +220,42 @@ function buildScenes(){
 	sidewalk13.position.set(-109, 0.75, -186);
 	sidewalk13.rotation.y = 0.085;
 
-	scene.add( sidewalk7, sidewalk8, sidewalk9, sidewalk10, sidewalk11, sidewalk12, sidewalk13 );
+	//scene.add( sidewalk7, sidewalk8, sidewalk9, sidewalk10, sidewalk11, sidewalk12, sidewalk13 );
 		
+	var length = 710, width = 910;
+	var rr = 5;
+
+	var shape = new THREE.Shape(); 
+	shape.moveTo(rr, 0);
+	shape.lineTo(length-rr, 0);
+	shape.absarc(length-rr,rr,rr,Math.PI*1.5, Math.PI*2);
+	shape.lineTo(length, width-rr);
+	shape.absarc(length-rr,width-rr,rr,0, Math.PI*0.5);
+	shape.lineTo(rr, width);
+	shape.absarc(rr,width-rr,rr,Math.PI/2, Math.PI);
+	shape.absarc(rr,rr,rr,Math.PI, Math.PI*1.5);
+
+	path = new THREE.Path();
+	path.moveTo(length / 47.3, width / 60.6);
+	path.lineTo(length / 47.3 * 46.3, width / 60.6);
+	path.lineTo(length / 47.3 * 46.3, width / 60.6 * 59.6);
+	path.lineTo(length / 47.3, width / 60.6 * 59.6);
+	path.lineTo(length / 47.3, width / 60.6);
+	shape.holes.push(path);
+
+	var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+	var material = new THREE.MeshLambertMaterial({
+		color: 0x888888,//0x6b6b6b
+		polygonOffset: true,
+		polygonOffsetFactor: -2,
+		polygonOffsetUnits: -2,
+		map:map1,
+		side:THREE.DoubleSide
+	});
+	var sidewalk14 = new THREE.Mesh(geometry, material);
+	sidewalk14.rotation.x = Math.PI / 2;
+	sidewalk14.position.set(-355, 1.5, -455);
+	scene.add(sidewalk14);
 
 /////////////////////////////////////////   building   //////////////////////////////////////////////////
 
@@ -242,7 +265,7 @@ function buildScenes(){
 		shape.lineTo(-39.5, -131);
 		shape.lineTo(-39.5, 131);
 		shape.lineTo(39.5, 131);
-	let building1 = new Obstacle(shape, new THREE.Vector3(205.5, 50, -215),[39.5, 131, 25]);
+	//let building1 = new Obstacle(shape, new THREE.Vector3(205.5, 50, -215),[39.5, 131, 25]);
 
 	
 	var shape = new THREE.Shape(); 
@@ -251,7 +274,7 @@ function buildScenes(){
 		shape.lineTo(-39.5, -131);
 		shape.lineTo(-39.5, 131);
 		shape.lineTo(39.5, 131);
-	let building2 = new Obstacle(shape, new THREE.Vector3(205.5, 50, 215),[39.5, 131, 25]);
+	//let building2 = new Obstacle(shape, new THREE.Vector3(205.5, 50, 215),[39.5, 131, 25]);
 
 	var shape = new THREE.Shape(); 
 		shape.moveTo(123, 45);
@@ -260,7 +283,7 @@ function buildScenes(){
 		shape.lineTo(-123, 45);
 		shape.lineTo(123, 45);
 
-	let building3 = new Obstacle(shape, new THREE.Vector3(-122.5, 50, 300),[123, 45, 25]);
+	//let building3 = new Obstacle(shape, new THREE.Vector3(-122.5, 50, 300),[123, 45, 25]);
 	
 	var shape = new THREE.Shape(); 
 	shape.moveTo(121, 38);
@@ -268,9 +291,9 @@ function buildScenes(){
 	shape.lineTo(-121, -38);
 	shape.lineTo(-121, 38);
 	shape.lineTo(121, 38);
-	let building4 = new Obstacle(shape, new THREE.Vector3(-122.5, 50, 122),[121, 38, 25]);
+	//let building4 = new Obstacle(shape, new THREE.Vector3(-122.5, 50, 122),[121, 38, 25]);
 
-	obstacles.push(building1, building2, building3, building4);
+	//obstacles.push(building1, building2, building3, building4);
 
 	//building 5
 	var shape = new THREE.Shape(); 
@@ -295,7 +318,7 @@ function buildScenes(){
 	const building5 = new THREE.Mesh( geometry5, material5 ) ;
 	building5.rotation.x = Math.PI/2;
 	building5.position.y = 50;
-	scene.add( building5 );
+	//scene.add( building5 );
 
 	//building 6
 	var shape = new THREE.Shape(); 
@@ -320,7 +343,161 @@ function buildScenes(){
 	const building6 = new THREE.Mesh( geometry6, material6 ) ;
 	building6.rotation.x = Math.PI/2;
 	building6.position.y = 50;
-	scene.add( building6 );
+	//scene.add( building6 );
+/*
+	let frontBuildingMap = loader.load ("https://i.imgur.com/vFFoobV.jpg")
+	const frontBuildingGeometry = new THREE.PlaneGeometry( 176, 150 );
+	const frontBuildingmaterial = new THREE.MeshBasicMaterial( {
+		side: THREE.DoubleSide, map: frontBuildingMap
+	} );
+	const frontBuilding = new THREE.Mesh( frontBuildingGeometry, frontBuildingmaterial );
+	frontBuilding.rotation.y = Math.PI/2;
+	frontBuilding.position.set(355, 76.5, -352);
+
+	var frontBuilding1 = frontBuilding.clone();
+	frontBuilding1.position.set(355, 76.5, -176);
+
+	var frontBuilding2 = frontBuilding.clone();
+	frontBuilding2.position.set(355, 76.5, 0);
+
+	var frontBuilding3 = frontBuilding.clone();
+	frontBuilding3.position.set(355, 76.5, 176);
+
+	var frontBuilding4 = frontBuilding.clone();
+	frontBuilding4.position.set(355, 76.5, 352);
+	scene.add( frontBuilding, frontBuilding1, frontBuilding2, frontBuilding3, frontBuilding4 );
+///////////////////
+
+	let leftBuildingMap = loader.load ("https://i.imgur.com/vlDsQXk.png")
+	const leftBuildingGeometry = new THREE.PlaneGeometry( 170, 170 );
+	const leftBuildingmaterial = new THREE.MeshBasicMaterial( {
+		side: THREE.DoubleSide, 
+		map: leftBuildingMap, 
+		alphaTest : 0.5
+	} );
+	const leftBuilding = new THREE.Mesh( leftBuildingGeometry, leftBuildingmaterial );
+	leftBuilding.position.set(-255, 66.5, -455);
+
+	var leftBuilding1 = leftBuilding.clone();
+	leftBuilding1.position.set(-85, 66.5, -455);
+
+	var leftBuilding2 = leftBuilding.clone();
+	leftBuilding2.position.set(85, 66.5, -455);
+
+	var leftBuilding3 = leftBuilding.clone();
+	leftBuilding3.position.set(255, 66.5, -455);
+
+	scene.add( leftBuilding, leftBuilding1, leftBuilding2, leftBuilding3 );*/
+
+
+/////////////////////////// grass trees bushes ///////////////////////////////////////////
+	texture = loader.load('https://i.imgur.com/omX5Drl.png');
+
+	var texMat = new THREE.MeshBasicMaterial({
+	  map: texture,
+	  //transparent: true
+	  alphaTest: 0.5
+	});
+	texture = loader.load('https://i.imgur.com/f4TTvV5.png');
+
+	var texMat1 = new THREE.MeshBasicMaterial({
+	  map: texture,
+	  transparent: true,
+	  alphaTest: 0.5
+	});
+
+	var tree = new THREE.Mesh(new THREE.PlaneGeometry(40, 80), texMat);
+	trees = [], trees1 = [], tress2 = [], tress3 = [];
+	var bush = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), texMat1);
+	bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
+  for (let i = 0; i < 23; i++) {
+	let tt = tree.clone();
+	tt.position.set (380, 30, 430-i*40)
+	trees.push (tt)
+    scene.add (tt)
+  }
+  for (let i = 0; i < 23; i++) {
+	let tt = tree.clone();
+	tt.position.set (-380, 30, 430-i*40)
+	trees1.push (tt)
+    scene.add (tt)
+  }
+  for (let i = 0; i < 20; i++) {
+	let tt = tree.clone();
+	tt.position.set (380 -i*40, 30, 480)
+	tress2.push (tt)
+    scene.add (tt)
+  }
+  for (let i = 0; i < 19; i++) {
+	let tt = tree.clone();
+	tt.position.set (360 -i*40, 30, -480)
+	tress3.push (tt)
+    scene.add (tt)
+  }
+//bushes
+  for (let i = 0; i < 62; i++) {
+	let bb = bush.clone();
+	bb.position.set (360, 5, 460-i*15)
+	bushes.push(bb)
+	scene.add (bb)
+  }
+  for (let i = 0; i < 60; i++) {
+	let bb = bush.clone();
+	bb.position.set (-360, 5, 440-i*15)
+	bushes1.push(bb)
+	scene.add (bb)
+  }
+  for (let i = 0; i < 49; i++) {
+	let bb = bush.clone();
+	bb.position.set (360-i*15, 5, 460)
+	bushes2.push(bb)
+	scene.add (bb)
+  }
+  for (let i = 0; i < 49; i++) {
+	let bb = bush.clone();
+	bb.position.set (360-i*15, 5, -460)
+	bushes3.push(bb)
+	scene.add (bb)
+  }
+
+  texture = loader.load('https://i.imgur.com/HmJ4wes.jpg');
+
+	var texMat2 = new THREE.MeshBasicMaterial({
+	  map: texture,
+	  transparent: true,
+	  alphaTest: 0.5
+	});
+	texture.wrapS = texture.wrapT = THREE.WrapRepeating
+	texture.repeat.set (.4,10)
+
+	var grass = new THREE.Mesh(new THREE.PlaneGeometry(80, 960), texMat2);
+	grass.rotation.x = -Math.PI/2;
+	grass.position.set(360, 0, 0);
+	
+	var grass1 = grass.clone();
+	grass1.position.set(-360, 0, 0);
+
+	texture1 = loader.load('https://i.imgur.com/HmJ4wes.jpg');
+
+	var texMat2 = new THREE.MeshBasicMaterial({
+	  map: texture1,
+	  transparent: true,
+	  alphaTest: 0.5,
+	  polygonOffset: true,
+      polygonOffsetFactor: -1,
+	  polygonOffsetUnits: -1
+	});
+	texture1.wrapS = texture1.wrapT = THREE.WrapRepeating
+	texture1.repeat.set (10,.4)
+	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(740, 40), texMat2);
+	grass2.rotation.x = -Math.PI/2;
+	grass2.position.set(0, 0, 460);
+
+	var grass3 = grass2.clone();
+	grass3.position.set(0, 0, -460);
+
+	scene.add(grass, grass1, grass2, grass3);
+
 
 ///////////////////////////////////////////   zebraCrossing  //////////////////////////////////////////////////
 	texture = loader.load('https://i.imgur.com/09w3f06.png');
@@ -948,94 +1125,7 @@ function buildScenes(){
 	scene.add(arrow1, arrow2, arrow3, arrow4);
 	//scene.add(arrow11);
 
-	/////////////////////////////////////trafic light///////////////////////////////////////////////////////
-
-	var traficLight1 = new THREE.Group();
-	const pillarGeometry = new THREE.CylinderGeometry( 1, 1, 50, 64 );
-	const pillarMaterial = new THREE.MeshLambertMaterial( {color: 0x67676D} );
-	const pillar = new THREE.Mesh( pillarGeometry, pillarMaterial );
-	pillar.position.set(0, 25, 0);
-
-	const pillarGeometry1 = new THREE.CylinderGeometry( .8, .8, 44.5, 64 );
-	const pillarMaterial1 = new THREE.MeshLambertMaterial( {color: 0x67676D} );
-	const pillar1 = new THREE.Mesh( pillarGeometry1, pillarMaterial1 );
-	pillar1.rotation.x = Math.PI/2;
-	pillar1.position.set(0, 46, -22);
-
-	const baseGeometry = new THREE.BoxGeometry( 6, 1, 6 );
-	const baseMaterial = new THREE.MeshLambertMaterial( {color: 0x67676D} );
-	const base = new THREE.Mesh( baseGeometry, baseMaterial );
-	base.position.set(0, 1, 0);
-
-	const boxGeometry = new THREE.BoxGeometry( 4, 7, 21 );
-	const boxMaterial = new THREE.MeshLambertMaterial( {color: 0x517875} );
-	const box = new THREE.Mesh( boxGeometry, boxMaterial );
-	box.position.set(0, 46, -40);
-
-	const redLightGeometry = new THREE.CircleGeometry( 3, 32 );
-	const redLightMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000,
-		side: THREE.DoubleSide,
-		polygonOffset: true,
-		polygonOffsetFactor: -1,
-		polygonOffsetUnits: -1 });
-	const redLight = new THREE.Mesh( redLightGeometry, redLightMaterial );
-	redLight.position.set(-2, 46, -47);
-	redLight.rotation.y = -Math.PI/2;
-
-	const yellowLightGeometry = new THREE.CircleGeometry( 3, 32 );
-	const yellowLightMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00,
-		side: THREE.DoubleSide,
-		polygonOffset: true,
-		polygonOffsetFactor: -1,
-		polygonOffsetUnits: -1 });
-	const yellowLight = new THREE.Mesh( yellowLightGeometry, yellowLightMaterial );
-	yellowLight.position.set(-2, 46, -40);
-	yellowLight.rotation.y = -Math.PI/2;
-		
-	const greenLightGeometry = new THREE.CircleGeometry( 3, 32 );
-	const greenLightMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00,
-		side: THREE.DoubleSide,
-		polygonOffset: true,
-		polygonOffsetFactor: -1,
-		polygonOffsetUnits: -1 });
-	const greenLight = new THREE.Mesh( greenLightGeometry, greenLightMaterial );
-	greenLight.position.set(-2, 46, -33);
-	greenLight.rotation.y = -Math.PI/2;
-
-
-	const redLight1 = new THREE.Mesh( redLightGeometry, redLightMaterial );
-	redLight1.position.set(2, 46, -33);
-	redLight1.rotation.y = -Math.PI/2;
-
-
-	const yellowLight1 = new THREE.Mesh( yellowLightGeometry, yellowLightMaterial );
-	yellowLight1.position.set(2, 46, -40);
-	yellowLight1.rotation.y = -Math.PI/2;
-		
-
-	const greenLight1 = new THREE.Mesh( greenLightGeometry, greenLightMaterial );
-	greenLight1.position.set(2, 46, -47);
-	greenLight1.rotation.y = -Math.PI/2;
-
-	traficLight1.position.set(-54, 0, 63);
-
-	traficLight1.add( pillar, pillar1, base, box, redLight, yellowLight, greenLight, redLight1, yellowLight1, greenLight1 );
-
-	var traficLight2 = traficLight1.clone();
-	traficLight2.rotation.y = Math.PI;
-	traficLight2.position.set (210, 0 ,-63);
-
-	var traficLight3 = traficLight1.clone();
-	traficLight3.rotation.y = -Math.PI/2;
-	traficLight3.position.set (15, 0 ,-120);
-
-
-	var traficLight4 = traficLight1.clone();
-	traficLight4.rotation.y = Math.PI/2;
-	traficLight4.position.set (145, 0 ,130);
-	traficLights.push(traficLight1, traficLight2);
-	scene.add(traficLight1, traficLight2, traficLight3, traficLight4);
-
+	
 }
 
 function drawReversingLine(){

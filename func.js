@@ -1,129 +1,5 @@
-function parking(theta){
-	//parkingMode 0 manual 1 auto parking 2 stop parking      
-	//PPart 0 turn right 1 change direction 2 turn left
-
-
-	if(parkingMode == 1 && parkingModeButton == false){            //auto parking Mode 1
-		
-		if(PPart == 0){             //turn right
-			car.speed -= 1;
-			car.speed = Math.clamp (car.speed, -50, 50);
-			theta -= 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(car.angle >= Math.PI /4 + parkingLocate[0]){
-				PPart = 1;
-			}
-		}
-		if(PPart == 1){             //change direction
-			car.speed = 0;
-			theta += 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(this.theta == Math.PI/7){
-				PPart = 2;
-			}
-		}
-		if(PPart == 2){             //turn left
-			car.speed -= 1;
-			car.speed = Math.clamp (car.speed, -50, 50);
-			theta += 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(car.angle <= 0 + parkingLocate[0]){
-				car.speed = 0;
-			}
-		}
-    }else if(parkingMode == 1 && parkingModeButton == true){            //auto parking Mode 2
-		if(PPart == 0){             //turn right
-			car.speed -= 1;
-			car.speed = Math.clamp (car.speed, -50, 50);
-			theta -= 0.02;
-			//console.log(car.mesh.position, 0);////////////////////
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(car.angle >= Math.PI /4 + parkingLocate[0]){
-				PPart = 1;
-			}
-		}
-		if(PPart == 1){             //change direction
-			car.speed = 0;
-			theta += 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(theta >= 0){
-				PPart = 2;
-			}
-		}
-		if(PPart == 2){             //go straight backward
-			car.speed  -= 1;
-			car.speed = Math.clamp (car.speed, -50, 50);
-			if(car.mesh.position.z >= 45){
-				console.log(car.mesh.position, 1);////////////////////
-				car.speed = 0;
-				PPart = 3;
-			}
-		}
-		if(PPart == 3){             //change direction
-			car.speed = 0;
-			theta += 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(theta == Math.PI/7){
-				PPart = 4;
-			}
-		}
-		if(PPart == 4){             //turn left
-			car.speed -= 1;
-			car.speed = Math.clamp (car.speed, -50, 50);
-			theta += 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(car.angle <= 0 + parkingLocate[0]){
-				car.speed = 0;
-				PPart = 5;
-			}
-		}
-		if(PPart == 5){             //change direction
-			car.speed = 0;
-			theta -= 0.02;
-			theta = Math.clamp (theta, -Math.PI/7, Math.PI/7);
-			if(theta <= 0){
-				PPart = 6;
-			}
-		}
-		if(PPart == 6){             //go straight forward
-			car.speed  += 1;
-			car.speed = Math.clamp (car.speed, -50, 50);
-			if(car.mesh.position.x >= 0){
-				car.speed = 0;
-			}
-		}
-    }else if(parkingMode === 2){     //stop parking
-		car.speed = 0;
-	}else {                          //manual
-		PPart = 0;
-	}
-	
-	return theta;
-}
-
-function moveCar(RC, omega, deltaT){
-	
-	// C is the center of car body
-    let C = car.mesh.position.clone();
-    var vv = C.clone().sub(RC).applyAxisAngle (new THREE.Vector3(0,1,0), omega*deltaT).add(RC);
-	
-	car.move(vv);
-	car.rotate(car.angle + omega*deltaT);
-	$('#warning').text("no hit");
-	car.changeColor(false);
-	for(var i = 0;i < obstacles.length;i++){
-		if(car.intersect(obstacles[i])){    //intersect
-			car.move(C);
-			car.rotate(car.angle - omega*deltaT);
-			$('#warning').text("hit");
-			car.changeColor(true);
-			break;
-		}
-	}
-}
-
 function cameraUpdate(theta, fSlowDown, bSlowDown){
-	car.dashboard.visible = false;
+	car.dashboard.mesh.visible = false;
     if (thirdPV) {
 		let carEnd = car.mesh.localToWorld (new THREE.Vector3(-10,0,0));
 		camera.lookAt (carEnd);
@@ -132,88 +8,149 @@ function cameraUpdate(theta, fSlowDown, bSlowDown){
     else if(firstPV){
 		var tmp = car.mesh.localToWorld(new THREE.Vector3(1, 10, 0));
 		camera.position.copy(tmp);
-		tmp = car.mesh.localToWorld(new THREE.Vector3(6, 10, 0));
+		tmp = car.mesh.localToWorld(new THREE.Vector3(6, 9.5, 0));
 		camera.lookAt(tmp);
 		
-		//rear mirror
-		let carEnd = car.mesh.localToWorld (new THREE.Vector3(-10, 0, 0));
-		rearMirror.lookAt(carEnd);
-		rearMirror.position.copy (car.mesh.localToWorld (new THREE.Vector3 (6,10,0)));
 		if(car.speed < 0){
-			let carEnd = car.mesh.localToWorld (new THREE.Vector3(-30, -6, 0));
+			let carEnd = car.mesh.localToWorld (new THREE.Vector3 (-19,0,0));
+			reversingCamera.position.copy (carEnd);
+			carEnd = car.mesh.localToWorld (new THREE.Vector3(-25, -1, 0));
 			reversingCamera.lookAt(carEnd);
-			reversingCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-21,-1,0)));
-			//console.log(surroundCamera.position);
-
-			surroundCamera.lookAt(car.mesh.localToWorld(new THREE.Vector3(0, 0, 0)));
-			surroundCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (0,70,0)));
 		}
 		
 		//dashboard
-		car.dashboard.visible = true;
-		car.dashboard.position.copy(tmp);
-		car.dashboard.position.y -= 2;
-		car.dashboard.rotation.y = car.angle;
-		car.dashboard.children[0].rotation.z = theta * -10;
+		car.dashboard.mesh.visible = true;
+		car.dashboard.mesh.position.copy(tmp);
+		car.dashboard.mesh.position.y -= 2;
+		car.dashboard.mesh.rotation.y = car.angle;
+		car.dashboard.mesh.rotation.z = -0.1;
+		car.dashboard.steeringWheel.rotation.z = theta * -21;
 		
-		if (keyboard.pressed('down') | keyboard.pressed('up')){
-			car.dashboard.children[2].rotation.z = Math.PI/12;
+		if (keyboard.pressed('down')){
+			car.dashboard.accelerator.position.x = 0.2;
+			car.dashboard.accelerator.position.y = -0.1;
+			car.dashboard.gearFrame.position.z = -0.13;
 		}
-		if (keyboard.up("down") | keyboard.up("up")) {
-			car.dashboard.children[2].rotation.z = 0;
+		else if(keyboard.pressed('up')){
+			car.dashboard.accelerator.position.x = 0.2;
+			car.dashboard.accelerator.position.y = -0.1;
+			car.dashboard.gearFrame.position.z = 0.17;
+		}
+		if (keyboard.up("down") | keyboard.up("up")){
+			car.dashboard.accelerator.position.x = 0;
+			car.dashboard.accelerator.position.y = 0;
 		}
 		if(bSlowDown == 1 | fSlowDown == 1){
-			car.dashboard.children[3].rotation.z = Math.PI/12;
+			car.dashboard.brakes.position.x = 0.2;
+			car.dashboard.brakes.position.y = -0.1;
 		}
-		else{
-			car.dashboard.children[3].rotation.z = 0;
-		} 
-			
+		else if(car.dashboard.brakes.name != 'dDrive'){
+			car.dashboard.brakes.position.x = 0;
+			car.dashboard.brakes.position.y = 0;
+		}
+		if(car.speed == 0){
+			//car.dashboard.gearFrame.position.z = -0.28;
+		}
     }
     else {
-		camera.position.set(-200, 100, 0); // fixed camera, no orbitControl!
+		camera.position.set(-300, 200, 0); // fixed camera, no orbitControl!
 		camera.lookAt(new THREE.Vector3(0, 0, 0));
     }
 }
 
-function radarPlay(){
-	//radarSound.play();
+function addObstacles(){
+	if(alternateObs[0].mesh){
+		obstacles.push(alternateObs[0]);
+		console.log(alternateObs[0].mesh.position);
+		alternateObs.shift();
+	}
 }
 
-function shiftGearLever(){
-	var num = Math.floor(car.dashboard.children[5].position.y *10)/10;
-	if(car.speed < 0){
-		if(num > 0.7)
-			num -= 0.1;
-		else if(num < 0.7)	
-				num += 0.1;
-		car.dashboard.children[5].position.y = num;		
-	}
-	else if(car.speed > 0){
-		if(num > 0)
-			num -= 0.1;
-		car.dashboard.children[5].position.y = num;	
-	}
-	else{
-		setTimeout(5000);
-		car.dashboard.children[5].position.y = 1;
-	}
+function readModel (modelName, targetSize=40) {
+	var onProgress = function(xhr) {
+		if (xhr.lengthComputable) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log(Math.round(percentComplete, 2) + '% downloaded');
+		}
+	};
+
+	var onError = function(xhr) {};
+	
+	//var model;
+	var mtlLoader =  new THREE.MTLLoader();
+	mtlLoader.setPath('models/');
+	mtlLoader.load(modelName+'.mtl', function(materials) {
+		materials.preload();
+
+		var objLoader =  new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.setPath('models/');
+		objLoader.load(modelName+'.obj', function(object) {
+
+			let theObject =  unitize (object, targetSize);
+			//theObject.add(new THREE.BoxHelper(theObject));
+			theObject.name = 'OBJ';
+
+			var model = new THREE.Object3D();
+			model.add(theObject);
+			model.rotation.y = Math.PI/2;
+			return model;
+		}, onProgress, onError);
+
+	});
+	
 	
 }
 
-function rotateTrace (rotC, steerAngle) {
-	var trace = new THREE.Vector3 (-25, -5,0);
- 	car.mesh.localToWorld (trace);
-  	var localY = new THREE.Vector3(0,1,0);
-	for (var i = 0; i < 3; i++) {
-		var tMrc = trace.clone().sub (rotC);
-		var theta = 10/tMrc.length();
-		var sign = steerAngle > 0 ? 1: -1;
-		var tr = tMrc.applyAxisAngle (localY, -sign*theta*i);
-		tr.add (rotC);
-		traceMeshes[i].position.copy (tr);
-		traceMeshes[i].rotation.y = car.angle;
-	}
+function unitize (object, targetSize) {  
+
+	// find bounding box of 'object'
+	var box3 = new THREE.Box3();
+	box3.setFromObject (object);
+	var size = new THREE.Vector3();
+	size.subVectors (box3.max, box3.min);
+	var center = new THREE.Vector3();
+	center.addVectors(box3.max, box3.min).multiplyScalar (0.5);
+
+	console.log ('center: ' + center.x + ', '+center.y + ', '+center.z );
+	console.log ('size: ' + size.x + ', ' +  size.y + ', '+size.z );
+
+	// uniform scaling according to objSize
+	var objSize = Math.max (size.x, size.y, size.z);
+	var scaleSet = targetSize/objSize;
+
+	var theObject =  new THREE.Object3D();
+	theObject.add (object);
+	object.scale.set (scaleSet, scaleSet, scaleSet);
+	object.position.set (-center.x*scaleSet, center.y*scaleSet/6, -center.z*scaleSet);
+	return theObject;
 }
 
+function PDControl(theta, dt){
+	var KP = 50;
+	var KD = 15;
+	this.vv = (this.vv === undefined) ? 0 : this.vv;
+	
+	var f = KP*(-theta) - KD*this.vv;
 
+	// plant dynamics 
+	this.vv += f*dt;
+	theta += this.vv*dt
+	
+	return theta;
+}
+
+function treesLootAt(){
+	let cameraRoot = camera.position.clone();
+	cameraRoot.y =camera.position.y;
+	trees.forEach (function(t) {t.lookAt (cameraRoot)})
+	trees1.forEach (function(t) {t.lookAt (cameraRoot)})
+	tress2.forEach (function(t) {t.lookAt (cameraRoot)})
+	tress3.forEach (function(t) {t.lookAt (cameraRoot)})
+	bushes.forEach (function(b) {b.lookAt (cameraRoot)})
+	bushes1.forEach (function(b) {b.lookAt (cameraRoot)})
+	bushes2.forEach (function(b) {b.lookAt (cameraRoot)})
+	bushes3.forEach (function(b) {b.lookAt (cameraRoot)})
+
+
+}
