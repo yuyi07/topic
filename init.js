@@ -1,40 +1,25 @@
-import * as THREE from "https://threejs.org/build/three.module.js";
-import {buildScenes} from './buildScenes.js';
-import {buildCar} from './buildThings.js';
-import {treesLootAt, treesVisible, cameraUpdate} from './func.js';
-import {onPointerDown, onPointerUp} from './buttonFunc.js';
-import {parking, keyboardAndRC, moveCar} from './carMove.js';
-
-
+import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+import {buildCar} from "./buildThings.js";
+import {firstPV,treesLootAt, treesVisible} from "./func.js";
+import {cameraUpdate} from "./func.js";
+import {onPointerDown} from "./buttonFunc.js";
+import {parking, keyboardAndRC, moveCar, flashTurnSignal} from "./carMove.js";
+import {buildScenes} from "./buildScenes.js";
 
 var scene, renderer, camera;
-var sceneHUD, cameraHUD;
-
+var sceneHUD, GPSCamera;
+var topCamera, thirdPVCamera;
+var reversingCamera;
 var keyboard = new KeyboardState();
 var clock = new THREE.Clock();
 
-var car, alternateObs = [], obstacles = []
-var raycaster, pickables = [];
-var mouse = new THREE.Vector2();
-var radarSound, RCmesh, RC, longBeep;
-var beeper = false, radarOn = false;
-
-var topCamera, scene1, thirdPVCamera;
-var soundBT = false, topView = false, GPSView = false;
-var thirdPV = false, firstPV = false;
-var parkingMode = 0, parkingAngle = 0;
-var PPart = 0;
-var reversingCamera, rearMirror;
-var parkingModeButton = false;
-var CCW = 0;
-var traceMeshes = [];
+var car, obstacles = [];
+var raycaster;
+var radarSound, RCmesh, longBeep;
+var topView = false, GPSView = false;
 var carParameter;
-var GPSCamera;
 
-var bushes0 = new THREE.Group();
-
- 
-function init() {
+export function init() {
 
 	scene = new THREE.Scene();
 	sceneHUD = new THREE.Scene();
@@ -45,8 +30,6 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
 	camera.position.set(-300, 200, 0);
-	cameraHUD = new THREE.OrthographicCamera(window.innerWidth / -2,window.innerWidth / 2,
-											window.innerHeight / 2,window.innerHeight / -2, 1, 1000);
 
 	var light = new THREE.HemisphereLight(0xffffff, 0x000000, 1);
 	light.position.set(0, 100, 0);
@@ -56,29 +39,11 @@ function init() {
 	carParameter = [{name:'bodyWidth', value:20}, {name:'bodyLength', value:38}
 					, {name:'axelLength', value:16}, {name:'frontWheelToBackWheel', value:26}];
 	
-	
-	var grid = new THREE.GridHelper (1200,120,'red','white');
-	scene.add (grid);
-
-
     ////////////////////////////////////////////////////////////
 	//car
     car = buildCar(new THREE.Vector3(-122, 13, 21));
 	var car2 = buildCar(new THREE.Vector3(-138, 13, 56));
 	obstacles.push(car2);
-	//obstacles
-	//var car2 = new ObstacleCar(new THREE.Vector3(55, 13, 70), 'Hyundai');
-	//var car3 = new ObstacleCar(new THREE.Vector3(-55, 13, 70), 'X5');
-	//alternateObs.push(car2, car3);
-	
-	let loader = new THREE.TextureLoader();
-	loader.crossOrigin = '';
-	//let texture = loader.load('./pictures/dKpYAbl.jpg?1');
-	//let obs = new Obstacle(new THREE.Vector3(0, 7, 100), [300, 2, 20], texture);
-	//let obs2 = new Obstacle(new THREE.Vector3(0, 7, -100), [300, 2, 20], texture);
-    
-	//obstacles.push(obs, obs2);
-	//scene.add(alternateObs, obstacles);
 	
 	//light
 	var light = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -94,7 +59,6 @@ function init() {
     renderer.autoClear = false;
 	
     //topCamera
-	scene1 = new THREE.Scene();
     topCamera = new THREE.OrthographicCamera(-window.innerWidth/26, window.innerWidth/26
 											, window.innerHeight/12, -window.innerHeight/12, 1, 1000);
     topCamera.position.y = 100;
@@ -106,11 +70,7 @@ function init() {
 											, window.innerHeight/24, -window.innerHeight/24, 1, 1000);
 	thirdPVCamera.lookAt (car.mesh.localToWorld (new THREE.Vector3(30,0,0)));
 	thirdPVCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-30,18,0)));
-	
-	//rear mirror
-    rearMirror = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
-    rearMirror.position.set(-60, 23, 40);
-	
+		
 	//Reversing camera
     reversingCamera = new THREE.OrthographicCamera(-window.innerWidth/52, window.innerWidth/52
 												, window.innerHeight/48, -window.innerHeight/48, 0.1, 1000);
@@ -131,64 +91,58 @@ function init() {
 	longBeep.loop = true;
 	
 	window.addEventListener ('pointerdown', onPointerDown, false);
-	window.addEventListener ('pointerup', onPointerUp, false);
 	raycaster = new THREE.Raycaster();
+	
 
+	flashTurnSignal();
 }
   
-function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(window.innerWidth, window.innerHeight);
-}
-  
-function animate() {
+export function animate() {
 	
     renderer.clear(true);
     
     keyboard.update();
   
     // 'static' variables  
-	car.theta = (car.theta === undefined) ? 0.001 : car.theta;
-    car.fSlowDown = (car.fSlowDown === undefined) ? 0 : car.fSlowDown;
-    car.bSlowDown = (car.bSlowDown === undefined) ? 0 : car.bSlowDown;
+	animate.theta = (animate.theta === undefined) ? 0.001 : animate.theta;
+    animate.fSlowDown = (animate.fSlowDown === undefined) ? 0 : animate.fSlowDown;
+    animate.bSlowDown = (animate.bSlowDown === undefined) ? 0 : animate.bSlowDown;
 	
-	//addObstacles();
     /////////////////////////////////////////////////////////////////
     //move car	
 	var deltaT = clock.getDelta();
 	
-	let paraArray = keyboardAndRC(car.theta, car.fSlowDown, car.bSlowDown, deltaT);
-	car.theta = paraArray[0];
-	car.fSlowDown = paraArray[1];
-	car.bSlowDown = paraArray[2];
+	let paraArray = keyboardAndRC(animate.theta, animate.fSlowDown, animate.bSlowDown, deltaT);
+	animate.theta = paraArray[0];
+	animate.fSlowDown = paraArray[1];
+	animate.bSlowDown = paraArray[2];
+	let RC = paraArray[3];
     
 	let frontWheelToBackWheel = carParameter[carParameter.map(x =>x.name).indexOf('frontWheelToBackWheel')].value;
-	
-    moveCar(RC, (car.speed * Math.tan(car.theta)/frontWheelToBackWheel), deltaT);
+    moveCar(RC, (car.speed * Math.tan(animate.theta)/frontWheelToBackWheel), deltaT);
 	
     //camera position
-	cameraUpdate(car.theta, car.fSlowDown, car.bSlowDown);
+	cameraUpdate(animate.theta, animate.fSlowDown, animate.bSlowDown);
 	
     //parking 
-	car.theta = parking(car.theta);
+	animate.theta = parking(animate.theta);
 		  
     /////////////////////////////////////////////
     // purely cosmetic ...    wheel turn  
-    car.leftfrontWheel.rotation.z += car.speed*deltaT/5;
-    car.rightfrontWheel.rotation.z += car.speed*deltaT/5;
-    car.leftRearWheel.rotation.z += car.speed*deltaT/5;
-	car.rightRearWheel.rotation.z += car.speed*deltaT/5;
+    car.leftfrontWheel.rotation.z -= car.speed*deltaT/5;
+    car.rightfrontWheel.rotation.z -= car.speed*deltaT/5;
+    car.leftRearWheel.rotation.z -= car.speed*deltaT/5;
+	car.rightRearWheel.rotation.z -= car.speed*deltaT/5;
 	
 	//trees
 	treesLootAt();
-
-
+  
     requestAnimationFrame(animate);
     render();
 }
   
 function render() {
+	
 	var WW = window.innerWidth;
 	var HH = window.innerHeight;
     renderer.setScissorTest( true );
@@ -199,7 +153,9 @@ function render() {
     renderer.render(scene, camera);
 
 	if(firstPV){
+		car.mesh.visible = false;
 		renderer.render(sceneHUD, camera);
+		//car.mesh.visible = true;
 		//reversing Camera
 		if(car.dashboard.gearFrame.position.z == -0.13){
 			renderer.setViewport(WW/2.41, HH/4, WW/6.5, HH/6);
@@ -236,10 +192,15 @@ function render() {
 			car.mapArrow.visible = false;
 		}
 	}
+	else car.mesh.visible = true;
 	renderer.setScissorTest( false );
 }
 
-export {scene, renderer, camera, sceneHUD, cameraHUD, keyboard, clock, car, alternateObs, obstacles, raycaster, pickables, mouse, radarSound, RC, RCmesh, longBeep, 
-    beeper, radarOn, topCamera, scene1, thirdPVCamera, soundBT, topView, GPSView, thirdPV , firstPV ,
-     parkingMode, parkingAngle, PPart, reversingCamera, rearMirror, parkingModeButton, CCW,  traceMeshes, carParameter, GPSCamera, bushes0};
- export {init, animate}    
+function onWindowResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+export {scene, sceneHUD, camera, GPSCamera, topCamera, thirdPVCamera, reversingCamera, keyboard
+		, car, obstacles, raycaster, radarSound, RCmesh, longBeep, topView, GPSView, carParameter};

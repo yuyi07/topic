@@ -1,8 +1,9 @@
+import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+import {car, obstacles, radarSound, longBeep} from "./init.js";
 
-import {obstacles, car, beeper} from './init.js';
+var beeper = false, radarOn = false;
 
 setInterval (poll, 200);
-
 
 function poll(){
 	
@@ -33,11 +34,13 @@ function poll(){
 	
 	if(min[0].dis < 20){
 		beeper = true;
+		longBeep.loop = true;
 		if (radarOn === false) 
 			setTimeout(radarPlay,0);
 	}
 	else {
 		beeper = false;
+		longBeep.loop = false;
 	}
 	
 }

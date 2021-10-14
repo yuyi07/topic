@@ -1,15 +1,11 @@
-import * as THREE from "https://threejs.org/build/three.module.js";
-import {PPart, parkingMode,parkingModeButton, car, keyboard, topCamera, thirdPVCamera, GPSCamera, carParameter, RCmesh, RC } from './init.js';
-import {PDControl} from './func.js';
+import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+import {car, topCamera, thirdPVCamera, GPSCamera, keyboard, obstacles, RCmesh, carParameter} from "./init.js";
+import {PDControl} from "./func.js";
 
+var parkingMode = 0, parkingAngle = 0, PPart = 0;
+var parkingModeButton = false;
 
-( function() {
-	Math.clamp = function(val,min,max) {
-		return Math.min(Math.max(val,min),max);
-	} 
-})();
-
-function parking(theta){
+export function parking(theta){
 	//parkingMode 0 manual 1 auto parking 2 stop parking      
 	//PPart 0 turn right 1 change direction 2 turn left
     if(parkingMode == 1 && parkingModeButton == false){            //auto parking Mode 1
@@ -123,7 +119,7 @@ function parking(theta){
 	return theta;
 }
 
-function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
+export function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 	//gas and brake icon
 	car.dashboard.brakeIcon.material.color.set('dimgrey');
 	car.dashboard.gasIcon.material.color.set('dimgrey');
@@ -133,17 +129,22 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 	if (keyboard.pressed('down')){
 		car.speed -= 1;
 		car.dashboard.gasIcon.material.color.set('springgreen');
+		car.dashboard.gearFrame.position.z = -0.13;//R
 	}
 	if (keyboard.pressed('up')){
 		car.speed += 1;
 		car.dashboard.gasIcon.material.color.set('springgreen');
+		car.dashboard.gearFrame.position.z = 0.17;//D
 	}
 	car.speed = Math.clamp (car.speed, -15, 50);
-  
-    if (keyboard.pressed('right'))
-		theta -= 0.005;
-    if (keyboard.pressed('left'))
-		theta += 0.005;  
+
+	
+    if (keyboard.pressed('right')){
+		theta -= 0.002;
+	}
+    if (keyboard.pressed('left')){
+		theta += 0.002;  
+	}
 	if(!keyboard.pressed('left') & !keyboard.pressed('right') & parkingMode !== 1){
 		theta = PDControl(theta, deltaT);
 		if(theta.toFixed(5) == 0.00000)
@@ -159,7 +160,7 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 
     //////////////////////////////////////////////////////////////
     
-    var RC = car.mesh.localToWorld (new THREE.Vector3(-frontWheelToBackWheel/2,0,-frontWheelToBackWheel/Math.tan(theta)));
+    let RC = car.mesh.localToWorld (new THREE.Vector3(-frontWheelToBackWheel/2,0,-frontWheelToBackWheel/Math.tan(theta)));
     RCmesh.position.copy (RC);
 	
 	//////////////////////////////////////////////////////////////
@@ -176,19 +177,41 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
       
     if (fSlowDown == 1) {
 		if(car.speed > 0) {  // moving forward --> slow down gradually
-			car.speed -= 1;
+			car.speed -= 0.1;
 		} else if (car.speed <= 0) {  // moving backward --> stop immediately
 			car.speed = 0;
 			fSlowDown = 0;
 		}
     } else if (bSlowDown == 1) {
 		if(car.speed < 0) {
-			car.speed += 1;
+			car.speed += 0.1;
 		} else if (car.speed >= 0) {
 			car.speed = 0;
 			bSlowDown = 0;
 		}
-    }
+    } else if(!keyboard.pressed("up") & !keyboard.pressed("down") & !keyboard.pressed("space") & !keyboard.pressed("alt") & !keyboard.pressed("ctrl")){
+		if(car.dashboard.gearFrame.position.z == -0.13 & car.speed > -2){ //R
+			car.speed -= 0.1;
+			if(car.speed.toFixed(1) == -2.0)
+				car.speed = -2;
+		} 
+		else if(car.dashboard.gearFrame.position.z == -0.13 & car.speed < -2){ //R
+			car.speed += 0.1;
+			if(car.speed.toFixed(1) == -2.0)
+				car.speed = -2;
+		}
+		else if(car.dashboard.gearFrame.position.z == 0.17 & car.speed > 2){//D
+			car.speed -= 0.1;
+			if(car.speed.toFixed(1) == 2.0)
+				car.speed = 2;
+		}
+		else if(car.dashboard.gearFrame.position.z == 0.17 & car.speed < 2){//D
+			car.speed += 0.1;
+			if(car.speed.toFixed(1) == 2.0)
+				car.speed = 2;
+		}
+		car.speed = Math.clamp (car.speed, -15, 50);
+	}
 	
 	///d-drive
 
@@ -222,6 +245,13 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 			car.speed += 1;
 		car.speed = Math.clamp (car.speed, -15, 50);
 	}
+	else if(car.dashboard.gearFrame.position.z == 0.17){///D
+		if(car.speed > 2)
+			car.speed -= 1;
+		else if(car.speed < 2)
+			car.speed += 1;
+		car.speed = Math.clamp (car.speed, -15, 50);
+	}
 	else if(parkingMode !== 1){
 		bSlowDown = 1;
 	}
@@ -241,13 +271,9 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 		car.dashboard.gasIcon.material.color.set('dimgrey');
 		car.brakeLightR.material.color.set('red');
 		car.brakeLightL.material.color.set('red');
-		car.dashboard.brakes.name = 'dDrive';
-	}
-	else if(keyboard.up("alt")){
-		car.dashboard.brakes.name = 'brakes';
 	}
 	
-	if(keyboard.pressed("ctrl")){    //another brakes
+	if(keyboard.pressed("ctrl")){    //slower brakes
 		if (car.speed < 0)
 			car.speed += 1.3;
 		else if (car.speed > 0)
@@ -272,10 +298,10 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 	//car speed pointer
 	car.dashboard.pointer.rotation.x = Math.abs(car.speed*0.042);
 	
-	return [theta, fSlowDown, bSlowDown];
+	return [theta, fSlowDown, bSlowDown, RC];
 }
 
-function moveCar(RC, omega, deltaT){
+export function moveCar(RC, omega, deltaT){
 	
 	// C is the center of car body
     let C = car.mesh.position.clone();
@@ -304,4 +330,26 @@ function moveCar(RC, omega, deltaT){
 	GPSCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-60,200,0)));
 }
 
-export {parking, keyboardAndRC, moveCar};
+export function flashTurnSignal(){
+	flashTurnSignal.ticker = (flashTurnSignal.ticker === undefined) ? true : flashTurnSignal.ticker;
+	car.turnSignalR.material.color.set(0x998000);
+	car.turnSignalL.material.color.set(0x998000);
+	car.dashboard.turnSignalL.material.color.set('dimgrey');
+	car.dashboard.turnSignalR.material.color.set('dimgrey');
+	
+	if(flashTurnSignal.ticker){
+		if (keyboard.pressed('right')){
+			car.dashboard.turnSignalR.material.color.set('springgreen');
+			car.turnSignalR.material.color.set('gold');
+		}
+		else if (keyboard.pressed('left')){
+			car.turnSignalL.material.color.set('gold');
+			car.dashboard.turnSignalL.material.color.set('springgreen');
+		}
+	}
+	flashTurnSignal.ticker =! flashTurnSignal.ticker;
+	
+	setTimeout(flashTurnSignal,300);
+}
+
+export {parkingMode, parkingAngle, parkingModeButton};

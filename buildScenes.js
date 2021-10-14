@@ -1,6 +1,7 @@
 import * as THREE from "https://threejs.org/build/three.module.js";
 
-import {scene, bushes0} from './init.js';
+import {scene} from './init.js';
+var bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
 function buildScenes(){
 	//ground
 
@@ -353,52 +354,20 @@ function buildScenes(){
 
 
 /////////////////////////// grass trees bushes ///////////////////////////////////////////
-	var texture = loader.load('./pictures/xwa8Bod.png');
-
-	var texMat = new THREE.MeshBasicMaterial({
-	  map: texture,
-	  //transparent: true
-	  alphaTest: 0.5
-	});
-	texture = loader.load('./pictures/f4TTvV5.png');
+	
+	var texture = loader.load('./pictures/f4TTvV5.png');
 
 	var texMat1 = new THREE.MeshBasicMaterial({
 	  map: texture,
 	  transparent: true,
 	  alphaTest: 0.5
 	});
-/*
-	var tree = new THREE.Mesh(new THREE.PlaneGeometry(50, 80), texMat);
-	trees = [], trees1 = [], trees2 = [], trees3 = [];
 
-  for (let i = 0; i < 23; i++) {
-	let tt = tree.clone();
-	tt.position.set (380, 30, 430-i*40)
-	trees.push (tt)
-    scene.add (tt)
-  }
-  for (let i = 0; i < 23; i++) {
-	let tt = tree.clone();
-	tt.position.set (-380, 30, 430-i*40)
-	trees1.push (tt)
-    scene.add (tt)
-  }
-  for (let i = 0; i < 20; i++) {
-	let tt = tree.clone();
-	tt.position.set (380 -i*40, 30, 480)
-	trees2.push (tt)
-    scene.add (tt)
-  }
-  for (let i = 0; i < 19; i++) {
-	let tt = tree.clone();
-	tt.position.set (360 -i*40, 30, -480)
-	trees3.push (tt)
-    scene.add (tt)
-  }*/
 //bushes
 
 	var bush = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), texMat1);
-	var bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
+	var bushes0 = new THREE.Group();
+	//var bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
 
   for (let i = 0; i < 62; i++) {
 	let bb = bush.clone();
@@ -1141,4 +1110,4 @@ function buildScenes(){
 	
 }
 
-export {buildScenes};
+export {buildScenes, bushes, bushes1, bushes2, bushes3};

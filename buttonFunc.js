@@ -1,6 +1,12 @@
-import {mouse, camera, car, raycaster, topView, pickables, parkingMode} from './init.js';
+import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+import {parkingMode, parkingAngle, parkingModeButton} from "./carMove.js";
+import {car, camera, topCamera, raycaster, radarSound, longBeep, topView, GPSView} from "./init.js";
+import {pickables} from "./buildDashboard.js";
 
-function onPointerDown (event) {
+var mouse = new THREE.Vector2();
+var soundBT = false, CCW = 0;
+
+export function onPointerDown (event) {
 	
 	event.preventDefault();  // may not be necessary
 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -49,18 +55,6 @@ function onPointerDown (event) {
 				radarOnDown();
 			else if(car.dashboard.radarOff.visible == true)
 				radarOffDown();
-		}
-		
-		if(intersects[0].object.name == 'accelerator'){
-			acceleratorDown();
-		}
-		
-		if(intersects[0].object.name == 'brakes'){
-			brakesDown();
-		}
-		
-		if(intersects[0].object.name == 'gear'){
-			gearDown();
 		}
 		
 		if(intersects[0].object.name == 'mapIcon'){
@@ -163,6 +157,8 @@ function radarOnDown(){
 	soundBT = true;
 	radarSound.volume = 0;
 	radarSound.muted = true;
+	longBeep.volume = 0;
+	longBeep.muted = true;
 	car.dashboard.radarOn.visible = false;
 	car.dashboard.radarOff.visible = true;
 }
@@ -171,27 +167,10 @@ function radarOffDown(){
 	soundBT = false;
 	radarSound.volume = 1;
 	radarSound.muted = false;
+	longBeep.volume = 1;
+	longBeep.muted = false;
 	car.dashboard.radarOn.visible = true;
 	car.dashboard.radarOff.visible = false;
-}
-
-function acceleratorDown(){
-	car.dashboard.accelerator.position.x = 0.2;
-	car.dashboard.accelerator.position.y = -0.1;
-	if(car.dashboard.R.visible){
-		car.speed -= 1;
-	}else if(car.dashboard.D.visible){
-		car.speed += 1;
-	}
-}
-
-function brakesDown(){
-	car.dashboard.brakes.position.x = 0.2;
-	car.dashboard.brakes.position.y = -0.1;
-}
-
-function gearDown(){
-	
 }
 
 function mapIconDown(){
@@ -207,32 +186,3 @@ function mapIconDown(){
 	car.dashboard.zoomOutBT.visible = false;
 	car.dashboard.splitLine.visible = false;
 }
-
-function onPointerUp (event) {
-	event.preventDefault();  // may not be necessary
-	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-	// find intersections
-	raycaster.setFromCamera(mouse, camera);
-	var intersects = raycaster.intersectObjects(pickables, true);
-	if (intersects.length > 0) {
-		if(intersects[0].object.name == 'accelerator'){
-			acceleratorUp();
-		}else if(intersects[0].object.name == 'brakes'){
-			brakesUp();
-		}
-	}
-}
-
-function acceleratorUp(){
-	car.dashboard.accelerator.position.x = 0;
-	car.dashboard.accelerator.position.y = 0;
-}
-
-function brakesUp(){
-	car.dashboard.brakes.position.x = 0;
-	car.dashboard.brakes.position.y = 0;
-}
-
-export {onPointerDown, onPointerUp};
