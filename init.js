@@ -1,7 +1,7 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 import {buildCar} from "./buildThings.js";
 import {firstPV,treesLootAt, treesVisible} from "./func.js";
-import {cameraUpdate} from "./func.js";
+import {cameraUpdate, loadCubemap} from "./func.js";
 import {onPointerDown} from "./buttonFunc.js";
 import {parking, keyboardAndRC, moveCar, flashTurnSignal} from "./carMove.js";
 import {buildScenes} from "./buildScenes.js";
@@ -89,6 +89,10 @@ export function init() {
 	radarSound.muted = false;
 	longBeep.muted = false;
 	longBeep.loop = true;
+
+	//background
+	var cubeMap = loadCubemap();
+  	scene.background = cubeMap;
 	
 	window.addEventListener ('pointerdown', onPointerDown, false);
 	raycaster = new THREE.Raycaster();
