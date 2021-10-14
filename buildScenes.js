@@ -1,20 +1,26 @@
+import * as THREE from "https://threejs.org/build/three.module.js";
+
+import {scene, bushes0} from './init.js';
 function buildScenes(){
 	//ground
 
 	let loader = new THREE.TextureLoader()
 	loader.setCrossOrigin ("")
-	let map = loader.load ("https://i.imgur.com/eD8CiAD.png?1")
+
 	var geometry = new THREE.PlaneGeometry( 680, 880 );
 	var material = new THREE.MeshLambertMaterial({
 		side: THREE.DoubleSide,
-		map: map
+		color:0x000000,
+		polygonOffset: true,
+		polygonOffsetFactor: -.5,
+		polygonOffsetUnits: -.5
 	});
 	const ground = new THREE.Mesh( geometry, material ) ;
 	ground.rotation.x = Math.PI/2;
 	scene.add( ground );
 
 /////////////////////////////////////////  sidewalk  //////////////////////////////////////////////////
-	let map1 = loader.load ("https://i.imgur.com/KIQL2BB.jpg")
+	let map1 = loader.load ("./pictures/KIQL2BB.jpg")
 	map1.wrapS = map1.wrapT = THREE.WrapRepeating
 	map1.repeat.set (.05,.05)
 	var length = 108, width = 291;
@@ -30,7 +36,7 @@ function buildScenes(){
 	shape.absarc(rr,width-rr,rr,Math.PI/2, Math.PI);
 	shape.absarc(rr,rr,rr,Math.PI, Math.PI*1.5);
 
-	path = new THREE.Path();
+	var path = new THREE.Path();
 	path.moveTo(length / 7.3, width / 21);
 	path.lineTo(length / 7.3 * 6.3, width / 21);
 	path.lineTo(length / 7.3 * 6.3, width / 21 * 20);
@@ -344,72 +350,27 @@ function buildScenes(){
 	building6.rotation.x = Math.PI/2;
 	building6.position.y = 50;
 	//scene.add( building6 );
-/*
-	let frontBuildingMap = loader.load ("https://i.imgur.com/vFFoobV.jpg")
-	const frontBuildingGeometry = new THREE.PlaneGeometry( 176, 150 );
-	const frontBuildingmaterial = new THREE.MeshBasicMaterial( {
-		side: THREE.DoubleSide, map: frontBuildingMap
-	} );
-	const frontBuilding = new THREE.Mesh( frontBuildingGeometry, frontBuildingmaterial );
-	frontBuilding.rotation.y = Math.PI/2;
-	frontBuilding.position.set(355, 76.5, -352);
-
-	var frontBuilding1 = frontBuilding.clone();
-	frontBuilding1.position.set(355, 76.5, -176);
-
-	var frontBuilding2 = frontBuilding.clone();
-	frontBuilding2.position.set(355, 76.5, 0);
-
-	var frontBuilding3 = frontBuilding.clone();
-	frontBuilding3.position.set(355, 76.5, 176);
-
-	var frontBuilding4 = frontBuilding.clone();
-	frontBuilding4.position.set(355, 76.5, 352);
-	scene.add( frontBuilding, frontBuilding1, frontBuilding2, frontBuilding3, frontBuilding4 );
-///////////////////
-
-	let leftBuildingMap = loader.load ("https://i.imgur.com/vlDsQXk.png")
-	const leftBuildingGeometry = new THREE.PlaneGeometry( 170, 170 );
-	const leftBuildingmaterial = new THREE.MeshBasicMaterial( {
-		side: THREE.DoubleSide, 
-		map: leftBuildingMap, 
-		alphaTest : 0.5
-	} );
-	const leftBuilding = new THREE.Mesh( leftBuildingGeometry, leftBuildingmaterial );
-	leftBuilding.position.set(-255, 66.5, -455);
-
-	var leftBuilding1 = leftBuilding.clone();
-	leftBuilding1.position.set(-85, 66.5, -455);
-
-	var leftBuilding2 = leftBuilding.clone();
-	leftBuilding2.position.set(85, 66.5, -455);
-
-	var leftBuilding3 = leftBuilding.clone();
-	leftBuilding3.position.set(255, 66.5, -455);
-
-	scene.add( leftBuilding, leftBuilding1, leftBuilding2, leftBuilding3 );*/
 
 
 /////////////////////////// grass trees bushes ///////////////////////////////////////////
-	texture = loader.load('https://i.imgur.com/omX5Drl.png');
+	var texture = loader.load('./pictures/xwa8Bod.png');
 
 	var texMat = new THREE.MeshBasicMaterial({
 	  map: texture,
 	  //transparent: true
 	  alphaTest: 0.5
 	});
-	texture = loader.load('https://i.imgur.com/f4TTvV5.png');
+	texture = loader.load('./pictures/f4TTvV5.png');
 
 	var texMat1 = new THREE.MeshBasicMaterial({
 	  map: texture,
 	  transparent: true,
 	  alphaTest: 0.5
 	});
+/*
+	var tree = new THREE.Mesh(new THREE.PlaneGeometry(50, 80), texMat);
+	trees = [], trees1 = [], trees2 = [], trees3 = [];
 
-	var tree = new THREE.Mesh(new THREE.PlaneGeometry(40, 80), texMat);
-	trees = [], trees1 = [], tress2 = [], tress3 = [];
-	var bush = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), texMat1);
-	bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
   for (let i = 0; i < 23; i++) {
 	let tt = tree.clone();
 	tt.position.set (380, 30, 430-i*40)
@@ -425,59 +386,72 @@ function buildScenes(){
   for (let i = 0; i < 20; i++) {
 	let tt = tree.clone();
 	tt.position.set (380 -i*40, 30, 480)
-	tress2.push (tt)
+	trees2.push (tt)
     scene.add (tt)
   }
   for (let i = 0; i < 19; i++) {
 	let tt = tree.clone();
 	tt.position.set (360 -i*40, 30, -480)
-	tress3.push (tt)
+	trees3.push (tt)
     scene.add (tt)
-  }
+  }*/
 //bushes
+
+	var bush = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), texMat1);
+	var bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
+
   for (let i = 0; i < 62; i++) {
 	let bb = bush.clone();
 	bb.position.set (360, 5, 460-i*15)
 	bushes.push(bb)
-	scene.add (bb)
+	bushes0.add(bb);
+
   }
   for (let i = 0; i < 60; i++) {
 	let bb = bush.clone();
 	bb.position.set (-360, 5, 440-i*15)
 	bushes1.push(bb)
-	scene.add (bb)
+	bushes0.add(bb);
+
   }
   for (let i = 0; i < 49; i++) {
 	let bb = bush.clone();
 	bb.position.set (360-i*15, 5, 460)
 	bushes2.push(bb)
-	scene.add (bb)
+	bushes0.add(bb);
+
   }
   for (let i = 0; i < 49; i++) {
 	let bb = bush.clone();
 	bb.position.set (360-i*15, 5, -460)
 	bushes3.push(bb)
-	scene.add (bb)
-  }
+	bushes0.add(bb);
 
-  texture = loader.load('https://i.imgur.com/HmJ4wes.jpg');
+  }
+  scene.add(bushes0);
+
+
+  texture = loader.load('./pictures/HmJ4wes.jpg');
 
 	var texMat2 = new THREE.MeshBasicMaterial({
 	  map: texture,
 	  transparent: true,
-	  alphaTest: 0.5
+	  alphaTest: 0.5,
+	  polygonOffset: true,
+		polygonOffsetFactor: -.5,
+		polygonOffsetUnits: -.5
 	});
 	texture.wrapS = texture.wrapT = THREE.WrapRepeating
 	texture.repeat.set (.4,10)
 
-	var grass = new THREE.Mesh(new THREE.PlaneGeometry(80, 960), texMat2);
+	var grass = new THREE.Mesh(new THREE.PlaneGeometry(80, 970), texMat2);
 	grass.rotation.x = -Math.PI/2;
 	grass.position.set(360, 0, 0);
 	
 	var grass1 = grass.clone();
 	grass1.position.set(-360, 0, 0);
 
-	texture1 = loader.load('https://i.imgur.com/HmJ4wes.jpg');
+	var texture1 = loader.load('./pictures/HmJ4wes.jpg');
 
 	var texMat2 = new THREE.MeshBasicMaterial({
 	  map: texture1,
@@ -489,18 +463,18 @@ function buildScenes(){
 	});
 	texture1.wrapS = texture1.wrapT = THREE.WrapRepeating
 	texture1.repeat.set (10,.4)
-	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(740, 40), texMat2);
+	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(780, 40), texMat2);
 	grass2.rotation.x = -Math.PI/2;
-	grass2.position.set(0, 0, 460);
+	grass2.position.set(0, 0, 470);
 
 	var grass3 = grass2.clone();
-	grass3.position.set(0, 0, -460);
+	grass3.position.set(0, 0, -470);
 
 	scene.add(grass, grass1, grass2, grass3);
 
 
 ///////////////////////////////////////////   zebraCrossing  //////////////////////////////////////////////////
-	texture = loader.load('https://i.imgur.com/09w3f06.png');
+	texture = loader.load('./pictures/09w3f06.png');
 /*
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
@@ -535,7 +509,7 @@ function buildScenes(){
 
 
 ///////////////////////////////////////////     road      //////////////////////////////////////////////////
-	texture = loader.load('https://i.imgur.com/rOQ1vf5.png');
+	texture = loader.load('./pictures/rOQ1vf5.png');
 
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
@@ -553,7 +527,7 @@ function buildScenes(){
 	road1.rotation.x = Math.PI/2;
 
 
-	texture1 = loader.load('https://i.imgur.com/KvjCb5P.png');
+	texture1 = loader.load('./pictures/KvjCb5P.png');
 	texture1.minFilter = THREE.NearestFilter;
 	texture1.needsUpdate = true;
 	var road2 = new THREE.Mesh(new THREE.PlaneGeometry(70, 80), new THREE.MeshBasicMaterial({
@@ -567,7 +541,7 @@ function buildScenes(){
 	road2.rotation.x = Math.PI/2;
 
 
-	texture2 = loader.load('https://i.imgur.com/VPddEdt.png?3');
+	var texture2 = loader.load('./pictures/VPddEdt.png');
 
 	texture2.wrapS = THREE.RepeatWrapping;
 	texture2.wrapT = THREE.RepeatWrapping;
@@ -618,7 +592,7 @@ function buildScenes(){
 	road7.rotation.x = Math.PI/2;
 	road7.rotation.z = Math.PI/2;
 	var road8 = road7.clone();
-	road8.position.set(-300, 0, 199);
+	road8.position.set(-300, 0, 199.8);
 
 
 	var road9 = new THREE.Mesh(new THREE.PlaneGeometry(332, 40), new THREE.MeshBasicMaterial({
@@ -704,7 +678,9 @@ function buildScenes(){
 	road15.rotation.x = Math.PI/2;
 
 
-	texture3 = loader.load('https://i.imgur.com/Q8DzNSQ.png?1');
+	var texture3 = loader.load('./pictures/Q8DzNSQ.png');
+	texture3.minFilter = THREE.NearestFilter;	
+	texture3.needsUpdate = true;
 	var road16 = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({
 		map: texture3,
 		alphaTest: 0.5,
@@ -712,6 +688,7 @@ function buildScenes(){
 		polygonOffset: true,
 		polygonOffsetFactor: -1,
 		polygonOffsetUnits: -1}));
+
 
 	road16.position.set(320, 0, 0);
 	road16.rotation.x = Math.PI/2;
@@ -753,9 +730,11 @@ function buildScenes(){
 	road21.rotation.x =  -Math.PI/2;
 	road21.rotation.z =  -Math.PI/2;
 
-	texture3 = loader.load('https://i.imgur.com/LeLVX2W.png?1');
+	var texture4 = loader.load('./pictures/LeLVX2W.png');
+	texture4.minFilter = THREE.NearestFilter;	
+	texture4.needsUpdate = true;
 	var road22 = new THREE.Mesh(new THREE.PlaneGeometry(85, 85), new THREE.MeshBasicMaterial({
-		map: texture3,
+		map: texture4,
 		alphaTest: 0.5,
 		side: THREE.DoubleSide,
 		polygonOffset: true,
@@ -1004,11 +983,45 @@ function buildScenes(){
 	redLine6.position.set(-262, 1.5, -362);
 	scene.add(redLine6);
 
+	var graygeometry = new THREE.BoxGeometry( 110, 1.5, 2 );
+	var garymaterial = new THREE.MeshLambertMaterial( {
+		color: 0x595959,
+		polygonOffset: true,
+		polygonOffsetFactor: -1,
+		polygonOffsetUnits: -1} );
+	var grayLine1 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine1.position.set(-165, .75, 68);
 
+	var graygeometry = new THREE.BoxGeometry( 55, 1.5, 2 );
+	var grayLine2 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine2.position.set(-214, .75, -67);
+
+	var graygeometry = new THREE.BoxGeometry( 110, 1.5, 2.3 );
+	var grayLine3 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine3.position.set(-97, .75, 175.9);
+
+	var graygeometry = new THREE.BoxGeometry( 2.5, 1.5, 110 );
+	var grayLine4 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine4.position.set(150.2, .75, 218);
+
+	var graygeometry = new THREE.BoxGeometry( 2.5, 1.5, 163 );
+	var grayLine5 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine5.position.set(150.2, .75, -245);
+
+	var graygeometry = new THREE.BoxGeometry( 2, 1.5, 110 );
+	var grayLine6 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine6.position.set(10, .75, -202);
+
+	var graygeometry = new THREE.BoxGeometry( 2.1, 1.5, 163 );
+	var grayLine7 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine7.rotation.y = 0.085;
+	grayLine7.position.set(-109.7, .75, -187);
+
+	scene.add( grayLine1, grayLine2, grayLine3, grayLine4, grayLine5, grayLine6, grayLine7 );
 
 	
 	//////////////////////////////////////////////////////   parking space  ////////////////////////////////////////////////////////////////////
-	texture4 = loader.load('https://i.imgur.com/ifr2RZj.png');
+	texture4 = loader.load('./pictures/ifr2RZj.png');
 	var space1 = new THREE.Mesh(new THREE.PlaneGeometry(55, 27), new THREE.MeshBasicMaterial({
 		map: texture4,
 		alphaTest: 0.5,
@@ -1079,7 +1092,7 @@ function buildScenes(){
 	scene.add(space15, space16);
 
 	/////////////////////////////////////////////arrow//////////////////////////////////////////////////
-	var texture6 = loader.load('https://i.imgur.com/hu3ZIWY.png');
+	var texture6 = loader.load('./pictures/hu3ZIWY.png');
 
 	texture6.minFilter = THREE.NearestFilter;
 	texture6.needsUpdate = true;
@@ -1101,7 +1114,7 @@ function buildScenes(){
 		arrow2.rotation.z =Math.PI;
 
 
-	var texture7 = loader.load('https://i.imgur.com/f5UGMBz.png?1');
+	var texture7 = loader.load('./pictures/f5UGMBz.png');
 
 	texture7.minFilter = THREE.NearestFilter;
 	texture7.needsUpdate = true;
@@ -1128,17 +1141,4 @@ function buildScenes(){
 	
 }
 
-function drawReversingLine(){
-	//Reversing display line
-	const material = new THREE.LineBasicMaterial( {color: 0xffffff } );
-	const points = [];
-	points.push( car.mesh.localToWorld (new THREE.Vector3(0,0,10)) );
-	points.push( car.mesh.localToWorld (new THREE.Vector3(0,0,-10)) );
-
-	const geometry = new THREE.BufferGeometry().setFromPoints( points );
-	const traceMesh = new THREE.Line( geometry, material );
-	for (var i = 0; i < 3; i++) {
-  		traceMeshes.push (traceMesh.clone());
-    	scene.add (traceMeshes[i]);
-	}
-}
+export {buildScenes};

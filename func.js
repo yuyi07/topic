@@ -1,3 +1,7 @@
+import * as THREE from "https://threejs.org/build/three.module.js";
+import {car, camera, alternateObs, obstacles} from './init.js';
+
+
 function cameraUpdate(theta, fSlowDown, bSlowDown){
 	car.dashboard.mesh.visible = false;
     if (thirdPV) {
@@ -129,13 +133,13 @@ function unitize (object, targetSize) {
 function PDControl(theta, dt){
 	var KP = 50;
 	var KD = 15;
-	this.vv = (this.vv === undefined) ? 0 : this.vv;
+	car.vv = (car.vv === undefined) ? 0 : car.vv;
 	
-	var f = KP*(-theta) - KD*this.vv;
+	var f = KP*(-theta) - KD*car.vv;
 
 	// plant dynamics 
-	this.vv += f*dt;
-	theta += this.vv*dt
+	car.vv += f*dt;
+	theta += car.vv*dt
 	
 	return theta;
 }
@@ -143,14 +147,19 @@ function PDControl(theta, dt){
 function treesLootAt(){
 	let cameraRoot = camera.position.clone();
 	cameraRoot.y =camera.position.y;
-	trees.forEach (function(t) {t.lookAt (cameraRoot)})
-	trees1.forEach (function(t) {t.lookAt (cameraRoot)})
-	tress2.forEach (function(t) {t.lookAt (cameraRoot)})
-	tress3.forEach (function(t) {t.lookAt (cameraRoot)})
+
 	bushes.forEach (function(b) {b.lookAt (cameraRoot)})
 	bushes1.forEach (function(b) {b.lookAt (cameraRoot)})
 	bushes2.forEach (function(b) {b.lookAt (cameraRoot)})
 	bushes3.forEach (function(b) {b.lookAt (cameraRoot)})
-
-
 }
+
+function treesVisible(canSee){
+
+	bushes.forEach (function(b) {b.visible = canSee})
+	bushes1.forEach (function(b) {b.visible = canSee})
+	bushes2.forEach (function(b) {b.visible = canSee})
+	bushes3.forEach (function(b) {b.visible = canSee})
+}
+
+export {cameraUpdate, addObstacles, readModel, PDControl, treesLootAt, treesVisible};

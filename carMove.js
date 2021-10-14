@@ -1,3 +1,14 @@
+import * as THREE from "https://threejs.org/build/three.module.js";
+import {PPart, parkingMode,parkingModeButton, car, keyboard, topCamera, thirdPVCamera, GPSCamera, carParameter, RCmesh, RC } from './init.js';
+import {PDControl} from './func.js';
+
+
+( function() {
+	Math.clamp = function(val,min,max) {
+		return Math.min(Math.max(val,min),max);
+	} 
+})();
+
 function parking(theta){
 	//parkingMode 0 manual 1 auto parking 2 stop parking      
 	//PPart 0 turn right 1 change direction 2 turn left
@@ -148,7 +159,7 @@ function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 
     //////////////////////////////////////////////////////////////
     
-    RC = car.mesh.localToWorld (new THREE.Vector3(-frontWheelToBackWheel/2,0,-frontWheelToBackWheel/Math.tan(theta)));
+    var RC = car.mesh.localToWorld (new THREE.Vector3(-frontWheelToBackWheel/2,0,-frontWheelToBackWheel/Math.tan(theta)));
     RCmesh.position.copy (RC);
 	
 	//////////////////////////////////////////////////////////////
@@ -292,3 +303,5 @@ function moveCar(RC, omega, deltaT){
 	GPSCamera.lookAt (car.mesh.localToWorld (new THREE.Vector3(50,0,0)));
 	GPSCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-60,200,0)));
 }
+
+export {parking, keyboardAndRC, moveCar};

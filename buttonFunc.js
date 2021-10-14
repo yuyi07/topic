@@ -1,3 +1,5 @@
+import {mouse, camera, car, raycaster, topView, pickables, parkingMode} from './init.js';
+
 function onPointerDown (event) {
 	
 	event.preventDefault();  // may not be necessary
@@ -232,3 +234,5 @@ function brakesUp(){
 	car.dashboard.brakes.position.x = 0;
 	car.dashboard.brakes.position.y = 0;
 }
+
+export {onPointerDown, onPointerUp};

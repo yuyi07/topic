@@ -1,40 +1,12 @@
-<html><head>
-<link rel="stylesheet" type="text/css" href="carStyle.css">
-</head>
-
-<body style='overflow:hidden'> 
-<div id="info">
-	<h2 id="warning">no hit</h2>
-</div>
-
-<audio id="radarSound" style="display:none" muted>
-<source src="https://huitney.github.io/topic/sounds/beep_short.wav" type='audio/wav'></audio>
-<audio id="longBeep" style="display:none" muted>
-<source src="https://huitney.github.io/topic/sounds/beep-13(long).wav" type='audio/wav'></audio>
-
-<script src="https://threejs.org/build/three.min.js"></script>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
-<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/MTLLoader.js"></script>
-<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/loaders/OBJLoader.js"></script>
-<script type='module' src="buildThings.js"></script>
-<script type='module' src="buildScenes.js"></script>
-<script type='module' src="func.js"></script>
-<script type='module' src="carMove.js"></script>
-<script type='module' src="radarFunc.js"></script>
-<script type='module' src="buttonFunc.js"></script>
-<script type='module' src="init.js"></script>
+import * as THREE from "https://threejs.org/build/three.module.js";
+import {buildScenes} from './buildScenes.js';
+import {buildCar} from './buildThings.js';
+import {treesLootAt, treesVisible, cameraUpdate} from './func.js';
+import {onPointerDown, onPointerUp} from './buttonFunc.js';
+import {parking, keyboardAndRC, moveCar} from './carMove.js';
 
 
-<button id="thirdPV"><img src="./pictures/OvvIh4R.png" style="width:80px;height:80px;"></button>
-<button id="firstPV"><img src="./pictures/AX5vRqY.png" style="width:80px;height:80px;"></button>
 
-
-<script type='module'>
-import { init, animate } from "./init.js";
-
-
-/*
 var scene, renderer, camera;
 var sceneHUD, cameraHUD;
 
@@ -44,7 +16,7 @@ var clock = new THREE.Clock();
 var car, alternateObs = [], obstacles = []
 var raycaster, pickables = [];
 var mouse = new THREE.Vector2();
-var radarSound, RCmesh, longBeep;
+var radarSound, RCmesh, RC, longBeep;
 var beeper = false, radarOn = false;
 
 var topCamera, scene1, thirdPVCamera;
@@ -59,26 +31,9 @@ var traceMeshes = [];
 var carParameter;
 var GPSCamera;
 
-var bushes0 = new THREE.Group();*/
-//button
+var bushes0 = new THREE.Group();
 
-var thirdPV = false, firstPV = false;
-
-$("#thirdPV").click(function() {
-	thirdPV = !thirdPV;
-	if(thirdPV)
-		firstPV = false;
-});
-
-$("#firstPV").click(function() {
-	firstPV = !firstPV;
-	if(firstPV)
-		thirdPV = false;
-});
-
-init();
-animate();
-  /*
+ 
 function init() {
 
 	scene = new THREE.Scene();
@@ -104,10 +59,7 @@ function init() {
 	
 	var grid = new THREE.GridHelper (1200,120,'red','white');
 	scene.add (grid);
-	
-	//const axesHelper = new THREE.AxesHelper( 25 );
-	//scene.add( axesHelper );
-	
+
 
     ////////////////////////////////////////////////////////////
 	//car
@@ -121,7 +73,7 @@ function init() {
 	
 	let loader = new THREE.TextureLoader();
 	loader.crossOrigin = '';
-	let texture = loader.load('https://i.imgur.com/dKpYAbl.jpg?1');
+	//let texture = loader.load('./pictures/dKpYAbl.jpg?1');
 	//let obs = new Obstacle(new THREE.Vector3(0, 7, 100), [300, 2, 20], texture);
 	//let obs2 = new Obstacle(new THREE.Vector3(0, 7, -100), [300, 2, 20], texture);
     
@@ -197,28 +149,29 @@ function animate() {
     keyboard.update();
   
     // 'static' variables  
-	this.theta = (this.theta === undefined) ? 0.001 : this.theta;
-    this.fSlowDown = (this.fSlowDown === undefined) ? 0 : this.fSlowDown;
-    this.bSlowDown = (this.bSlowDown === undefined) ? 0 : this.bSlowDown;
+	car.theta = (car.theta === undefined) ? 0.001 : car.theta;
+    car.fSlowDown = (car.fSlowDown === undefined) ? 0 : car.fSlowDown;
+    car.bSlowDown = (car.bSlowDown === undefined) ? 0 : car.bSlowDown;
 	
 	//addObstacles();
     /////////////////////////////////////////////////////////////////
     //move car	
 	var deltaT = clock.getDelta();
 	
-	let paraArray = keyboardAndRC(this.theta, this.fSlowDown, this.bSlowDown, deltaT);
-	this.theta = paraArray[0];
-	this.fSlowDown = paraArray[1];
-	this.bSlowDown = paraArray[2];
+	let paraArray = keyboardAndRC(car.theta, car.fSlowDown, car.bSlowDown, deltaT);
+	car.theta = paraArray[0];
+	car.fSlowDown = paraArray[1];
+	car.bSlowDown = paraArray[2];
     
 	let frontWheelToBackWheel = carParameter[carParameter.map(x =>x.name).indexOf('frontWheelToBackWheel')].value;
-    moveCar(RC, (car.speed * Math.tan(this.theta)/frontWheelToBackWheel), deltaT);
+	
+    moveCar(RC, (car.speed * Math.tan(car.theta)/frontWheelToBackWheel), deltaT);
 	
     //camera position
-	cameraUpdate(this.theta, this.fSlowDown, this.bSlowDown);
+	cameraUpdate(car.theta, car.fSlowDown, car.bSlowDown);
 	
     //parking 
-	this.theta = parking(this.theta);
+	car.theta = parking(car.theta);
 		  
     /////////////////////////////////////////////
     // purely cosmetic ...    wheel turn  
@@ -285,6 +238,8 @@ function render() {
 	}
 	renderer.setScissorTest( false );
 }
-*/
 
-</script></body></html>
+export {scene, renderer, camera, sceneHUD, cameraHUD, keyboard, clock, car, alternateObs, obstacles, raycaster, pickables, mouse, radarSound, RC, RCmesh, longBeep, 
+    beeper, radarOn, topCamera, scene1, thirdPVCamera, soundBT, topView, GPSView, thirdPV , firstPV ,
+     parkingMode, parkingAngle, PPart, reversingCamera, rearMirror, parkingModeButton, CCW,  traceMeshes, carParameter, GPSCamera, bushes0};
+ export {init, animate}    

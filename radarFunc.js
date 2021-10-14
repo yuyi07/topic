@@ -1,4 +1,8 @@
+
+import {obstacles, car, beeper} from './init.js';
+
 setInterval (poll, 200);
+
 
 function poll(){
 	
