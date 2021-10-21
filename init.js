@@ -1,10 +1,12 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 import {buildCar} from "./buildThings.js";
-import {firstPV,treesLootAt, treesVisible} from "./func.js";
-import {cameraUpdate, loadCubemap} from "./func.js";
+import {firstPV,treesLootAt, treesVisible, reversingLineVisible} from "./func.js";
+import {cameraUpdate, loadCubemap, reversingLine} from "./func.js";
 import {onPointerDown} from "./buttonFunc.js";
 import {parking, keyboardAndRC, moveCar, flashTurnSignal} from "./carMove.js";
 import {buildScenes} from "./buildScenes.js";
+import {revLine} from "./buildThings.js";
+
 
 var scene, renderer, camera;
 var sceneHUD, GPSCamera;
@@ -18,6 +20,10 @@ var raycaster;
 var radarSound, RCmesh, longBeep;
 var topView = false, GPSView = false;
 var carParameter;
+var sign;
+
+
+
 
 export function init() {
 
@@ -96,6 +102,10 @@ export function init() {
 	
 	window.addEventListener ('pointerdown', onPointerDown, false);
 	raycaster = new THREE.Raycaster();
+
+
+	//ReveringLine
+	revLine();
 	
 
 	flashTurnSignal();
@@ -140,7 +150,11 @@ export function animate() {
 	
 	//trees
 	treesLootAt();
-  
+
+	//reversingLine
+	sign = animate.theta > 0 ? 1: -1;
+	reversingLine();
+
     requestAnimationFrame(animate);
     render();
 }
@@ -153,7 +167,8 @@ function render() {
 
     renderer.setViewport(0, 0, WW, HH);
     renderer.setScissor(0, 0, WW, HH);
-    renderer.clear();
+	renderer.clear();
+	reversingLineVisible(false);
     renderer.render(scene, camera);
 
 	if(firstPV){
@@ -167,9 +182,12 @@ function render() {
 			renderer.clear();
 			car.brakeLightR.visible = false;
 			car.brakeLightL.visible = false;
+		
 			treesVisible(false);
+			reversingLineVisible(true);
 			renderer.render(scene, reversingCamera);	
 			treesVisible(true);
+		
 			car.brakeLightR.visible = true;
 			car.brakeLightL.visible = true;
 		}
@@ -207,4 +225,4 @@ function onWindowResize() {
 }
 
 export {scene, sceneHUD, camera, GPSCamera, topCamera, thirdPVCamera, reversingCamera, keyboard
-		, car, obstacles, raycaster, radarSound, RCmesh, longBeep, topView, GPSView, carParameter};
+		, car, obstacles, raycaster, radarSound, RCmesh, longBeep, topView, GPSView, carParameter, sign};

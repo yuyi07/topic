@@ -413,7 +413,7 @@ function buildScenes(){
 	texture.wrapS = texture.wrapT = THREE.WrapRepeating
 	texture.repeat.set (.4,10)
 
-	var grass = new THREE.Mesh(new THREE.PlaneGeometry(80, 970), texMat2);
+	var grass = new THREE.Mesh(new THREE.PlaneGeometry(20, 930), texMat2);
 	grass.rotation.x = -Math.PI/2;
 	grass.position.set(360, 0, 0);
 	
@@ -432,12 +432,12 @@ function buildScenes(){
 	});
 	texture1.wrapS = texture1.wrapT = THREE.WrapRepeating
 	texture1.repeat.set (10,.4)
-	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(780, 40), texMat2);
+	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(740, 20), texMat2);
 	grass2.rotation.x = -Math.PI/2;
-	grass2.position.set(0, 0, 470);
+	grass2.position.set(0, 0, 460);
 
 	var grass3 = grass2.clone();
-	grass3.position.set(0, 0, -470);
+	grass3.position.set(0, 0, -460);
 
 	scene.add(grass, grass1, grass2, grass3);
 
@@ -1107,6 +1107,19 @@ function buildScenes(){
 	scene.add(arrow1, arrow2, arrow3, arrow4);
 	//scene.add(arrow11);
 
+
+	var texture8 = loader.load('./pictures/Meadow/negy.jpg');
+	texture8.wrapS = texture8.wrapT = THREE.WrapRepeating
+	texture8.repeat.set (30,30)
+	texture8.minFilter = THREE.NearestFilter;
+	texture8.needsUpdate = true;
+	var floor = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshBasicMaterial({
+		map: texture8,
+		alphaTest: 0.5,
+		side: THREE.DoubleSide
+	}));
+	floor.rotation.x = -Math.PI/2;
+	scene.add(floor);
 	
 }
 

@@ -4,6 +4,7 @@ import {PDControl} from "./func.js";
 
 var parkingMode = 0, parkingAngle = 0, PPart = 0;
 var parkingModeButton = false;
+var RC;
 
 export function parking(theta){
 	//parkingMode 0 manual 1 auto parking 2 stop parking      
@@ -160,7 +161,7 @@ export function keyboardAndRC(theta, fSlowDown, bSlowDown, deltaT){
 
     //////////////////////////////////////////////////////////////
     
-    let RC = car.mesh.localToWorld (new THREE.Vector3(-frontWheelToBackWheel/2,0,-frontWheelToBackWheel/Math.tan(theta)));
+    RC = car.mesh.localToWorld (new THREE.Vector3(-frontWheelToBackWheel/2,0,-frontWheelToBackWheel/Math.tan(theta)));
     RCmesh.position.copy (RC);
 	
 	//////////////////////////////////////////////////////////////
@@ -352,4 +353,4 @@ export function flashTurnSignal(){
 	setTimeout(flashTurnSignal,300);
 }
 
-export {parkingMode, parkingAngle, parkingModeButton};
+export {parkingMode, parkingAngle, parkingModeButton, RC};
