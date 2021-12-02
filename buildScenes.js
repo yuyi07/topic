@@ -5,6 +5,7 @@ var bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
 function buildScenes(){
 	//ground
 
+	
 	let loader = new THREE.TextureLoader()
 	loader.setCrossOrigin ("")
 
