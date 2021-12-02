@@ -454,8 +454,8 @@ export function revLine(){
 
 	let len = 2;
 	for (let i = 0; i < len; i++) {
-		let z = i*-20+10
-		positions.push(-10, -10, z);
+		positions.push(-10, -10, -10);
+		positions.push(-10, -10, 10);
 	
 	}
 	var geometry = new LineGeometry();
@@ -464,7 +464,7 @@ export function revLine(){
 
 	var matLine = new LineMaterial({
 		color: 0xffff00,
-		linewidth: 0.03, // in pixels
+		linewidth: 0.05, // in pixels
 		//vertexColors: THREE.VertexColors,
 		//resolution:  // to be set by renderer, eventually
 		dashed: false

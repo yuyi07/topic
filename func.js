@@ -210,7 +210,7 @@ function makeCCWArc(r, theta1, theta2, center = [0, 0], colorName='white') {
 
 	var matLine2 = new LineMaterial({
 		color: colorName,
-		linewidth: 0.03, // in pixels
+		linewidth: 0.05, // in pixels
 		dashed: false,
 		polygonOffset: true,
 		polygonOffsetFactor: -20,
