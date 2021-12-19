@@ -1,6 +1,6 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
-import {parkingMode, parkingAngle, parkingModeButton} from "./carMove.js";
 import {car, camera, topCamera, raycaster, radarSound, longBeep, topView, GPSView} from "./init.js";
+
 import {pickables} from "./buildDashboard.js";
 
 var mouse = new THREE.Vector2();

@@ -1,6 +1,10 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 import {carParameter, scene} from "./init.js";
 import {buildDashboard} from "./buildDashboard.js";
+import {Line2} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/Line2.js';
+import {LineMaterial} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/LineMaterial.js';
+import {LineGeometry} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/LineGeometry.js';
+var traceMeshes = [], traceMeshesBlue = [];
 
 export class Car {
 	constructor(pos, size, materialArray, materialArray2, dashboard, mapArrow, brakeLight, turnSignal, colorName = 'white') {
@@ -36,6 +40,7 @@ export class Car {
 		this.leftRearWheel = new THREE.Group();
 		this.rightRearWheel = new THREE.Group();
 		this.seats = buildSeats();
+		
 		
 		this.mesh.add(this.leftfrontWheel, this.rightfrontWheel, this.leftRearWheel, this.rightRearWheel
 					, this.brakeLightR, this.brakeLightL, this.seats, this.turnSignalR, this.turnSignalL);
@@ -443,3 +448,66 @@ function buildSeats(){
 	return seats;
 }
 
+export function revLine(){
+	var positions = [];
+
+
+	let len = 2;
+	for (let i = 0; i < len; i++) {
+		positions.push(-10, -10, -10);
+		positions.push(-10, -10, 10);
+	
+	}
+	var geometry = new LineGeometry();
+	geometry.setPositions(positions);
+
+
+	var matLine = new LineMaterial({
+		color: 0xffff00,
+		linewidth: 0.05, // in pixels
+		//vertexColors: THREE.VertexColors,
+		//resolution:  // to be set by renderer, eventually
+		dashed: false
+	});
+	const traceMesh = new Line2(geometry, matLine);
+	traceMesh.computeLineDistances();
+	for (var i = 0; i < 2; i++) {
+		traceMeshes.push (traceMesh.clone());
+		scene.add (traceMeshes[i]);
+	}
+	/////
+	var positions1 = [];
+
+	for (let i = 0; i < 9; i++) {  
+		positions1.push(0, -10, 10);
+		positions1.push(0, -10, -10);
+		positions1.push(30, -10, -10);
+		positions1.push(30, -10, 10);
+		positions1.push(10, -10, 10);
+		positions1.push(10, -10, -10); 
+		positions1.push(0, -10, -10); 
+		positions1.push(0, -10, 10); 
+		positions1.push(20, -10, 10); 
+
+
+	}
+
+	var geometry1 = new LineGeometry();
+	geometry1.setPositions(positions1);
+	var matLine1 = new LineMaterial({
+		color: 0x0080ff,
+		linewidth: 0.03, // in pixels
+		//vertexColors: THREE.VertexColors,
+		//resolution:  // to be set by renderer, eventually
+		dashed: false
+	});
+
+	var  traceMesh1 = new Line2(geometry1, matLine1);
+	traceMesh1.computeLineDistances();
+	
+	traceMeshesBlue.push (traceMesh1.clone());
+
+	scene.add (traceMeshesBlue[0]);
+}
+
+export { traceMeshes, traceMeshesBlue };
