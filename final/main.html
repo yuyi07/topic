@@ -1,0 +1,97 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="shortcut icon" href="#"/>
+<link rel="stylesheet" type="text/css" href="../carStyle.css">
+</head>
+
+<body style = 'overflow:hidden'> 
+
+<audio id="radarSound" style="display:none" muted>
+<source src="https://huitney.github.io/topic/sounds/beep_short.wav" type='audio/wav'></audio>
+<audio id="longBeep" style="display:none" muted>
+<source src="https://huitney.github.io/topic/sounds/beep-13(long).wav" type='audio/wav'></audio>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
+<script src="https://cdn.socket.io/4.1.3/socket.io.js"></script>
+
+<button id="thirdPV"><img src="https://i.imgur.com/OvvIh4R.png" style="width:80px;height:80px;"></button>
+<button id="firstPV"><img src="https://i.imgur.com/AX5vRqY.png" style="width:80px;height:80px;"></button>
+
+<script type ="module">
+import * as THREE from "https://unpkg.com/three@0.125.1/build/three.module.js";
+import {init, animate, car} from "https://raw.githack.com/Huitney/topic/master/init.js";
+import {poll} from "https://raw.githack.com/Huitney/topic/master/radarFunc.js";
+import {changePickedWheel, changePickedGas, changePickedBrake, controllParkingMode} from "https://raw.githack.com/Huitney/topic/master/carMove.js";
+
+
+( function() {
+	Math.clamp = function(val,min,max) {
+		return Math.min(Math.max(val,min),max);
+	} 
+})();
+
+init();
+animate();
+
+var socket;
+
+//////////////////
+// when document.ready()    
+$(function () {
+	socket = io();
+
+	socket.on('angle sent', function(msg) {
+		car.theta = (msg / (Math.PI*3)) * (Math.PI/7) * 2;
+		//console.log(msg, car.theta);
+	});
+	
+	socket.on('value sent', function(msg) {
+		let tmp = `${(msg*50).toFixed(0)}`;
+		car.speed = tmp;
+		//console.log(tmp);
+	});
+	
+	socket.on('gear sent', function(msg) {
+		car.gear = msg;
+		switch(msg){
+			case 'p':
+				car.dashboard.gearFrame.position.z = -3.08;//P
+				break;
+			case 'r':
+				car.dashboard.gearFrame.position.z = -2.93;//R
+				break;
+			case 'n':
+				car.dashboard.gearFrame.position.z = -2.78;//N
+				break;
+			case 'd':
+				car.dashboard.gearFrame.position.z = -2.63;//D
+				break;
+			default:
+				console.log(msg);
+				break;
+		}
+	});
+	
+	socket.on('parking sent', function(msg) {
+		controllParkingMode();
+	});
+	
+	socket.on('picked wheel sent', function(msg) {
+		changePickedWheel(msg);
+	});
+	
+	socket.on('picked gas sent', function(msg) {
+		changePickedGas(msg);
+	});
+	
+	socket.on('picked brake sent', function(msg) {
+		changePickedBrake(msg);
+	});
+
+});
+
+setInterval (poll, 200);
+
+</script></body></html>

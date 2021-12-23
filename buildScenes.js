@@ -67,8 +67,6 @@ function buildScenes(){
 	sidewalk1.rotation.x = Math.PI / 2;
 	sidewalk1.position.set(151.5, 1.5, -360.5);
 
-	var obs1 = new Obstacle(new THREE.Vector3(205.5, 10, -215),[39.5, 10, 131]);
-	obstacles.push(obs1);
 	
 	var sidewalk2 = sidewalk1.clone();
 	sidewalk2.position.set(151.5, 1.5, 68.5);
@@ -366,7 +364,8 @@ function buildScenes(){
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set(2, 1);*/
-	texture.minFilter = THREE.NearestFilter;
+	
+	texture.minFilter = THREE.LinearMipMapLinearFilter;
 	texture.needsUpdate = true;
 	var zebraCrossing1 = new THREE.Mesh(new THREE.PlaneGeometry(130, 60), new THREE.MeshBasicMaterial({
 		map: texture,
@@ -401,7 +400,7 @@ function buildScenes(){
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set(2, 1);
-	texture.minFilter = THREE.NearestFilter;
+	texture.minFilter = THREE.LinearMipMapLinearFilter;
 	texture.needsUpdate = true;
 	var road1 = new THREE.Mesh(new THREE.PlaneGeometry(270, 80), new THREE.MeshBasicMaterial({
 		map: texture,
@@ -415,7 +414,7 @@ function buildScenes(){
 
 
 	texture1 = loader.load('./pictures/KvjCb5P.png');
-	texture1.minFilter = THREE.NearestFilter;
+	texture1.minFilter = THREE.LinearMipMapLinearFilter;
 	texture1.needsUpdate = true;
 	var road2 = new THREE.Mesh(new THREE.PlaneGeometry(70, 80), new THREE.MeshBasicMaterial({
 		map: texture1,
@@ -433,7 +432,7 @@ function buildScenes(){
 	texture2.wrapS = THREE.RepeatWrapping;
 	texture2.wrapT = THREE.RepeatWrapping;
 	texture2.repeat.set(2, 1);
-	texture2.minFilter = THREE.NearestFilter;
+	texture2.minFilter = THREE.LinearMipMapLinearFilter;
 	texture2.needsUpdate = true;
 	var road3 = new THREE.Mesh(new THREE.PlaneGeometry(323,80), new THREE.MeshBasicMaterial({
 		map: texture,
@@ -566,7 +565,7 @@ function buildScenes(){
 
 
 	var texture3 = loader.load('./pictures/Q8DzNSQ.png');
-	texture3.minFilter = THREE.NearestFilter;	
+	texture3.minFilter = THREE.LinearMipMapLinearFilter;	
 	texture3.needsUpdate = true;
 	var road16 = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({
 		map: texture3,
@@ -618,7 +617,7 @@ function buildScenes(){
 	road21.rotation.z =  -Math.PI/2;
 
 	var texture4 = loader.load('./pictures/LeLVX2W.png');
-	texture4.minFilter = THREE.NearestFilter;	
+	texture4.minFilter = THREE.LinearMipMapLinearFilter;	
 	texture4.needsUpdate = true;
 	var road22 = new THREE.Mesh(new THREE.PlaneGeometry(85, 85), new THREE.MeshBasicMaterial({
 		map: texture4,
@@ -951,7 +950,7 @@ function buildScenes(){
 	/////////////////////////////////////////////arrow//////////////////////////////////////////////////
 	var texture6 = loader.load('./pictures/hu3ZIWY.png');
 
-	texture6.minFilter = THREE.NearestFilter;
+	texture6.minFilter = THREE.LinearMipMapLinearFilter;
 	texture6.needsUpdate = true;
 	var arrow1 = new THREE.Mesh(new THREE.PlaneGeometry(35, 60), new THREE.MeshBasicMaterial({
 		map: texture6,
@@ -973,7 +972,7 @@ function buildScenes(){
 
 	var texture7 = loader.load('./pictures/f5UGMBz.png');
 
-	texture7.minFilter = THREE.NearestFilter;
+	texture7.minFilter = THREE.LinearMipMapLinearFilter;
 	texture7.needsUpdate = true;
 	var arrow3 = new THREE.Mesh(new THREE.PlaneGeometry(35, 60), new THREE.MeshBasicMaterial({
 		map: texture7,
@@ -999,7 +998,7 @@ function buildScenes(){
 	var texture8 = loader.load('./pictures/Meadow/negy.jpg');
 	texture8.wrapS = texture8.wrapT = THREE.WrapRepeating
 	texture8.repeat.set (30,30)
-	texture8.minFilter = THREE.NearestFilter;
+	texture8.minFilter = THREE.LinearMipMapLinearFilter;
 	texture8.needsUpdate = true;
 	var floor = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshBasicMaterial({
 		map: texture8,
