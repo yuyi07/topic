@@ -1,15 +1,13 @@
 import * as THREE from "https://threejs.org/build/three.module.js";
 
-import {scene, obstacles} from './init.js';
-import {Obstacle} from './buildThings.js';
-
+import {scene} from './init.js';
 var bushes = [], bushes1 = [], bushes2 = [], bushes3 = [];
 function buildScenes(){
 	//ground
 
 	
-	let loader = new THREE.TextureLoader()
-	loader.setCrossOrigin ("")
+	let loader = new THREE.TextureLoader();
+	loader.setCrossOrigin ("");
 
 	var geometry = new THREE.PlaneGeometry( 680, 880 );
 	var material = new THREE.MeshLambertMaterial({
@@ -24,9 +22,9 @@ function buildScenes(){
 	scene.add( ground );
 
 /////////////////////////////////////////  sidewalk  //////////////////////////////////////////////////
-	let map1 = loader.load ("./pictures/KIQL2BB.jpg")
-	map1.wrapS = map1.wrapT = THREE.WrapRepeating
-	map1.repeat.set (.05,.05)
+	let map1 = loader.load ("./pictures/KIQL2BB.jpg");
+	map1.wrapS = map1.wrapT = THREE.WrapRepeating;
+	map1.repeat.set (.05,.05);
 	var length = 108, width = 291;
 	var rr = 5;
 
@@ -66,12 +64,11 @@ function buildScenes(){
 	var sidewalk1 = new THREE.Mesh(geometry, material);
 	sidewalk1.rotation.x = Math.PI / 2;
 	sidewalk1.position.set(151.5, 1.5, -360.5);
-
 	
 	var sidewalk2 = sidewalk1.clone();
 	sidewalk2.position.set(151.5, 1.5, 68.5);
 
-	var length = 275, width = 119;
+	var length = 275, width = 120;
 	var rr = 5;
 
 	var shape = new THREE.Shape(); 
@@ -101,7 +98,7 @@ function buildScenes(){
 	geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 	var sidewalk3 = new THREE.Mesh(geometry, material);
 	sidewalk3.rotation.x = Math.PI / 2;
-	sidewalk3.position.set(-259.3, 1.5, 240);
+	sidewalk3.position.set(-260, 1.5, 240);
 
 	var length = 271, width = 106;
 	var rr = 5;
@@ -165,7 +162,7 @@ function buildScenes(){
 	geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 	var sidewalk5 = new THREE.Mesh(geometry, material);
 	sidewalk5.rotation.x = Math.PI / 2;
-	sidewalk5.position.set(-123.3, 1.5, -360.5);
+	sidewalk5.position.set(-123, 1.5, -360.5);
 
 	var length = 70, width = 292;
 	var rr = 5;
@@ -231,7 +228,7 @@ function buildScenes(){
 	sidewalk13.position.set(-109, 0.75, -186);
 	sidewalk13.rotation.y = 0.085;
 
-	scene.add( sidewalk7, sidewalk8, sidewalk9, sidewalk10, sidewalk11, sidewalk12, sidewalk13 ); //gray line
+	//scene.add( sidewalk7, sidewalk8, sidewalk9, sidewalk10, sidewalk11, sidewalk12, sidewalk13 );
 		
 	var length = 710, width = 910;
 	var rr = 5;
@@ -268,6 +265,94 @@ function buildScenes(){
 	sidewalk14.position.set(-355, 1.5, -455);
 	scene.add(sidewalk14);
 
+/////////////////////////////////////////   building   //////////////////////////////////////////////////
+
+	var shape = new THREE.Shape(); 
+		shape.moveTo(39.5, 131);
+		shape.lineTo(39.5, -131);
+		shape.lineTo(-39.5, -131);
+		shape.lineTo(-39.5, 131);
+		shape.lineTo(39.5, 131);
+	//let building1 = new Obstacle(shape, new THREE.Vector3(205.5, 50, -215),[39.5, 131, 25]);
+
+	
+	var shape = new THREE.Shape(); 
+		shape.moveTo(39.5, 131);
+		shape.lineTo(39.5, -131);
+		shape.lineTo(-39.5, -131);
+		shape.lineTo(-39.5, 131);
+		shape.lineTo(39.5, 131);
+	//let building2 = new Obstacle(shape, new THREE.Vector3(205.5, 50, 215),[39.5, 131, 25]);
+
+	var shape = new THREE.Shape(); 
+		shape.moveTo(123, 45);
+		shape.lineTo(123, -45);
+		shape.lineTo(-123, -45);
+		shape.lineTo(-123, 45);
+		shape.lineTo(123, 45);
+
+	//let building3 = new Obstacle(shape, new THREE.Vector3(-122.5, 50, 300),[123, 45, 25]);
+	
+	var shape = new THREE.Shape(); 
+	shape.moveTo(121, 38);
+	shape.lineTo(121, -38);
+	shape.lineTo(-121, -38);
+	shape.lineTo(-121, 38);
+	shape.lineTo(121, 38);
+	//let building4 = new Obstacle(shape, new THREE.Vector3(-122.5, 50, 122),[121, 38, 25]);
+
+	//obstacles.push(building1, building2, building3, building4);
+
+	//building 5
+	var shape = new THREE.Shape(); 
+	shape.moveTo(-5, -82);
+	shape.lineTo(-5, -347);
+	shape.lineTo(-108, -347);
+	shape.lineTo(-85, -82);
+	shape.lineTo(-5, -82);
+
+	var extrudeSettings = {
+		steps: 1,
+		depth: 50,
+		bevelEnabled: false,
+	};
+
+	var geometry5 = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+	var material5 = new THREE.MeshLambertMaterial({
+		color:0xffffff,
+		transparent:true,
+		opacity:0.5
+	});
+	const building5 = new THREE.Mesh( geometry5, material5 ) ;
+	building5.rotation.x = Math.PI/2;
+	building5.position.y = 50;
+	//scene.add( building5 );
+
+	//building 6
+	var shape = new THREE.Shape(); 
+	shape.moveTo(-183, -82);
+	shape.lineTo(-204, -346);
+	shape.lineTo(-245, -346);
+	shape.lineTo(-245, -82);
+	shape.lineTo(-183, -82);
+
+	var extrudeSettings = {
+		steps: 1,
+		depth: 50,
+		bevelEnabled: false,
+	};
+
+	var geometry6 = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+	var material6 = new THREE.MeshLambertMaterial({
+		color:0xffffff,
+		transparent:true,
+		opacity:0.5
+	});
+	const building6 = new THREE.Mesh( geometry6, material6 ) ;
+	building6.rotation.x = Math.PI/2;
+	building6.position.y = 50;
+	//scene.add( building6 );
+
 
 /////////////////////////// grass trees bushes ///////////////////////////////////////////
 	
@@ -288,28 +373,28 @@ function buildScenes(){
   for (let i = 0; i < 62; i++) {
 	let bb = bush.clone();
 	bb.position.set (360, 5, 460-i*15)
-	bushes.push(bb)
+	bushes.push(bb);
 	bushes0.add(bb);
 
   }
   for (let i = 0; i < 60; i++) {
 	let bb = bush.clone();
 	bb.position.set (-360, 5, 440-i*15)
-	bushes1.push(bb)
+	bushes1.push(bb);
 	bushes0.add(bb);
 
   }
   for (let i = 0; i < 49; i++) {
 	let bb = bush.clone();
 	bb.position.set (360-i*15, 5, 460)
-	bushes2.push(bb)
+	bushes2.push(bb);
 	bushes0.add(bb);
 
   }
   for (let i = 0; i < 49; i++) {
 	let bb = bush.clone();
 	bb.position.set (360-i*15, 5, -460)
-	bushes3.push(bb)
+	bushes3.push(bb);
 	bushes0.add(bb);
 
   }
@@ -326,10 +411,10 @@ function buildScenes(){
 		polygonOffsetFactor: -.5,
 		polygonOffsetUnits: -.5
 	});
-	texture.wrapS = texture.wrapT = THREE.WrapRepeating
-	texture.repeat.set (.4,10)
+	texture.wrapS = texture.wrapT = THREE.WrapRepeating;
+	texture.repeat.set (.4,10);
 
-	var grass = new THREE.Mesh(new THREE.PlaneGeometry(20, 930), texMat2);
+	var grass = new THREE.Mesh(new THREE.PlaneGeometry(80, 970), texMat2);
 	grass.rotation.x = -Math.PI/2;
 	grass.position.set(360, 0, 0);
 	
@@ -346,14 +431,14 @@ function buildScenes(){
       polygonOffsetFactor: -1,
 	  polygonOffsetUnits: -1
 	});
-	texture1.wrapS = texture1.wrapT = THREE.WrapRepeating
-	texture1.repeat.set (10,.4)
-	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(740, 20), texMat2);
+	texture1.wrapS = texture1.wrapT = THREE.WrapRepeating;
+	texture1.repeat.set (10,.4);
+	var grass2 = new THREE.Mesh(new THREE.PlaneGeometry(780, 40), texMat2);
 	grass2.rotation.x = -Math.PI/2;
-	grass2.position.set(0, 0, 460);
+	grass2.position.set(0, 0, 470);
 
 	var grass3 = grass2.clone();
-	grass3.position.set(0, 0, -460);
+	grass3.position.set(0, 0, -470);
 
 	scene.add(grass, grass1, grass2, grass3);
 
@@ -364,8 +449,7 @@ function buildScenes(){
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set(2, 1);*/
-	
-	texture.minFilter = THREE.LinearMipMapLinearFilter;
+	texture.minFilter = THREE.LinearFilter;
 	texture.needsUpdate = true;
 	var zebraCrossing1 = new THREE.Mesh(new THREE.PlaneGeometry(130, 60), new THREE.MeshBasicMaterial({
 		map: texture,
@@ -414,7 +498,7 @@ function buildScenes(){
 
 
 	texture1 = loader.load('./pictures/KvjCb5P.png');
-	texture1.minFilter = THREE.LinearMipMapLinearFilter;
+	texture1.minFilter = THREE.LinearFilter;
 	texture1.needsUpdate = true;
 	var road2 = new THREE.Mesh(new THREE.PlaneGeometry(70, 80), new THREE.MeshBasicMaterial({
 		map: texture1,
@@ -425,7 +509,7 @@ function buildScenes(){
 		polygonOffsetUnits: -1}));
 	road2.position.x = 225;
 	road2.rotation.x = Math.PI/2;
-
+	texture1.minFilter = THREE.LinearMipMapLinearFilter;
 
 	var texture2 = loader.load('./pictures/VPddEdt.png');
 
@@ -709,11 +793,12 @@ function buildScenes(){
 		shape.absarc(rr,width-rr,rr,Math.PI/2, Math.PI);
 		shape.absarc(rr,rr,rr,Math.PI, Math.PI*1.5);
 	
-		var path = new THREE.Path();
-		path.absarc(length-rr*1.5,rr*1.5,rr,Math.PI*1.5, Math.PI*2);
-		path.absarc(length-rr*1.5,width-rr*1.5,rr,0, Math.PI*0.5);
-		path.absarc(rr*1.5,width-rr*1.5,rr,Math.PI/2, Math.PI);
-		path.absarc(rr*1.5,rr*1.5,rr,Math.PI, Math.PI*1.5);
+		path = new THREE.Path();
+		path.moveTo(length / 36.6, width / 97.3);
+		path.lineTo(length / 36.6 * 35.6, width / 97.3);
+		path.lineTo(length / 36.6 * 35.6, width / 97.3 * 96.3);
+		path.lineTo(length / 36.6, width / 97.3 * 96.3);
+		path.lineTo(length / 36.6, width / 97.3);
 		shape.holes.push(path);
 	
 		var extrudeSettings = {
@@ -730,8 +815,7 @@ function buildScenes(){
 		var redLine1 = new THREE.Mesh(geometry, material);
 		redLine1.rotation.x = Math.PI / 2;
 		redLine1.position.set(149, 1.5, -361.5);
-		scene.add(redLine1);
-		
+		scene.add(redLine1);	
 
 		var redLine2 = redLine1.clone();
 		redLine2.position.set(149, 1.5, 67.5);
@@ -750,11 +834,12 @@ function buildScenes(){
 	shape.absarc(rr,width-rr,rr,Math.PI/2, Math.PI);
 	shape.absarc(rr,rr,rr,Math.PI, Math.PI*1.5);
 
-	var path = new THREE.Path();
-	path.absarc(length-rr*1.5,rr*1.5,rr,Math.PI*1.5, Math.PI*2);
-	path.absarc(length-rr*1.5,width-rr*1.5,rr,0, Math.PI*0.5);
-	path.absarc(rr*1.5,width-rr*1.5,rr,Math.PI/2, Math.PI);
-	path.absarc(rr*1.5,rr*1.5,rr,Math.PI, Math.PI*1.5);
+	path = new THREE.Path();
+	path.moveTo(length / 139, width / 61);
+	path.lineTo(length / 139 * 136, width / 61);
+	path.lineTo(length / 139 * 136, width / 61 * 58);
+	path.lineTo(length / 139, width / 61 * 58);
+	path.lineTo(length / 139, width / 61);
 	shape.holes.push(path);
 
 	var extrudeSettings = {
@@ -782,11 +867,12 @@ function buildScenes(){
 	shape.absarc(rr,width-rr,rr,Math.PI/2, Math.PI);
 	shape.absarc(rr,rr,rr,Math.PI, Math.PI*1.5);
 
-	var path = new THREE.Path();
-	path.absarc(length-rr*1.5,rr*1.5,rr,Math.PI*1.5, Math.PI*2);
-	path.absarc(length-rr*1.5,width-rr*1.5,rr,0, Math.PI*0.5);
-	path.absarc(rr*1.5,width-rr*1.5,rr,Math.PI/2, Math.PI);
-	path.absarc(rr*1.5,rr*1.5,rr,Math.PI, Math.PI*1.5);
+	path = new THREE.Path();
+	path.moveTo(length / 91.6, width / 36.6);
+	path.lineTo(length / 91.6 * 90.6, width / 36.6);
+	path.lineTo(length / 91.6 * 90.6, width / 36.6 * 35.6);
+	path.lineTo(length / 91.6, width / 36.6 * 35.6);
+	path.lineTo(length / 91.6, width / 36.6);
 	shape.holes.push(path);
 
 	var extrudeSettings = {
@@ -814,13 +900,12 @@ function buildScenes(){
 	shape.absarc(29,width-rr,rr,Math.PI/2, Math.PI);
 	shape.absarc(rr,rr,rr,Math.PI, Math.PI*1.5);
 
-
-	var path = new THREE.Path();
-	path.moveTo(length / 30, width / 70);
+	path = new THREE.Path();
+	path.moveTo(length / 69, width / 148.5);
 	path.lineTo(length / 69 * 66, width / 148.5);
 	path.lineTo(length / 69 * 66, width / 148.5 * 145.5);
 	path.lineTo(length / 3.6, width / 148.5 * 145.5);
-	//path.lineTo(length / 69, width / 148.5);
+	path.lineTo(length / 69, width / 148.5);
 	shape.holes.push(path);
 
 	var extrudeSettings = {
@@ -868,12 +953,41 @@ function buildScenes(){
 	redLine6.position.set(-262, 1.5, -362);
 	scene.add(redLine6);
 
-	var shape = new THREE.Shape(); 
-	shape.moveTo(39.5, 131);
-	shape.lineTo(39.5, -131);
-	shape.lineTo(-39.5, -131);
-	shape.lineTo(-39.5, 131);
-	shape.lineTo(39.5, 131);
+	var graygeometry = new THREE.BoxGeometry( 110, 1.5, 2 );
+	var garymaterial = new THREE.MeshLambertMaterial( {
+		color: 0x595959,
+		polygonOffset: true,
+		polygonOffsetFactor: -1,
+		polygonOffsetUnits: -1} );
+	var grayLine1 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine1.position.set(-165, .75, 68);
+
+	var graygeometry = new THREE.BoxGeometry( 55, 1.5, 2 );
+	var grayLine2 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine2.position.set(-214, .75, -67);
+
+	var graygeometry = new THREE.BoxGeometry( 110, 1.5, 2.3 );
+	var grayLine3 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine3.position.set(-97, .75, 175.9);
+
+	var graygeometry = new THREE.BoxGeometry( 2.5, 1.5, 110 );
+	var grayLine4 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine4.position.set(150.2, .75, 218);
+
+	var graygeometry = new THREE.BoxGeometry( 2.5, 1.5, 163 );
+	var grayLine5 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine5.position.set(150.2, .75, -245);
+
+	var graygeometry = new THREE.BoxGeometry( 2, 1.5, 110 );
+	var grayLine6 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine6.position.set(10, .75, -202);
+
+	var graygeometry = new THREE.BoxGeometry( 2.1, 1.5, 163 );
+	var grayLine7 = new THREE.Mesh( graygeometry, garymaterial );
+	grayLine7.rotation.y = 0.085;
+	grayLine7.position.set(-109.7, .75, -187);
+
+	scene.add( grayLine1, grayLine2, grayLine3, grayLine4, grayLine5, grayLine6, grayLine7 );
 
 	
 	//////////////////////////////////////////////////////   parking space  ////////////////////////////////////////////////////////////////////
@@ -993,20 +1107,22 @@ function buildScenes(){
 	arrow4.rotation.z = Math.PI/2;
 	scene.add(arrow1, arrow2, arrow3, arrow4);
 	//scene.add(arrow11);
+	
+	//stop sign
+	var texture8 = loader.load('./pictures/dB4AdSy.png');
 
+	var stopSign = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshBasicMaterial({
+								map: texture8,
+								alphaTest: 0.5,
+								side: THREE.DoubleSide}));
+	stopSign.rotation.y = -Math.PI/2;	
+	stopSign.position.set(230, 25, 68);
+	var stopSignPole = new THREE.Mesh( new THREE.CylinderGeometry( 0.5, 0.5, 20, 32 ), new THREE.MeshBasicMaterial( {color: 'darkgray'} ) );
+	stopSignPole.rotation.y = Math.PI/2;	
+	stopSignPole.position.y = -15;
+	stopSign.add( stopSignPole );
 
-	var texture8 = loader.load('./pictures/Meadow/negy.jpg');
-	texture8.wrapS = texture8.wrapT = THREE.WrapRepeating
-	texture8.repeat.set (30,30)
-	texture8.minFilter = THREE.LinearMipMapLinearFilter;
-	texture8.needsUpdate = true;
-	var floor = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshBasicMaterial({
-		map: texture8,
-		alphaTest: 0.5,
-		side: THREE.DoubleSide
-	}));
-	floor.rotation.x = -Math.PI/2;
-	scene.add(floor);
+	scene.add(stopSign);
 	
 }
 

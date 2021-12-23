@@ -4,8 +4,8 @@ import { MTLLoader } from 'https://raw.githack.com/mrdoob/three.js/master/exampl
 import {Line2} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/Line2.js';
 import {LineMaterial} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/LineMaterial.js';
 import {LineGeometry} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/LineGeometry.js';
-import {carParameter, scene} from "https://raw.githack.com/Huitney/topic/master/init.js";
-import {buildDashboard} from "https://raw.githack.com/Huitney/topic/master/buildDashboard.js";
+import {carParameter, scene} from "./init.js";
+import {buildDashboard} from "./buildDashboard.js";
 var traceMeshes = [], traceMeshesBlue = [];
 
 export class Car {
