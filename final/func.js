@@ -2,8 +2,8 @@ import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 import {Line2} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/Line2.js';
 import {LineMaterial} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/LineMaterial.js';
 import {LineGeometry} from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/lines/LineGeometry.js';
-import {car, camera, reversingCamera, keyboard, scene, sign, topCamera, thirdPVCamera, GPSCamera, obstacles, RCmesh, carParameter} from "https://raw.githack.com/Huitney/topic/master/init.js";
-import {bushes, bushes1, bushes2, bushes3} from "https://raw.githack.com/Huitney/topic/master/buildScenes.js"
+import {car, camera, reversingCamera, keyboard, scene, sign, topCamera, thirdPVCamera, GPSCamera, obstacles, RCmesh, carParameter} from "./init.js";
+import {bushes, bushes1, bushes2, bushes3} from "./buildScenes.js"
 import {traceMeshes, traceMeshesBlue} from './buildThings.js';
 
 var thirdPV = false, firstPV = false;
@@ -151,7 +151,7 @@ export function reversingLine(RC){
 		let theta2l = Math.atan2(vvl.z, vvl.x);
 	  
 		  // compute delta_theta
-		var HL = 28;  
+		var HL = 30;  
 		var delta_theta = HL/Rc;
 	  
 		scene.remove (scene.getObjectByName ('arcR'));
