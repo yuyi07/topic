@@ -155,6 +155,7 @@ export function animate() {
 	sign = animate.theta > 0 ? 1: -1;
 	reversingLine();
 
+
     requestAnimationFrame(animate);
     render();
 }
@@ -185,7 +186,8 @@ function render() {
 		
 			treesVisible(false);
 			reversingLineVisible(true);
-			renderer.render(scene, reversingCamera);	
+			renderer.render(scene, reversingCamera);
+			reversingLineVisible(false);	
 			treesVisible(true);
 		
 			car.brakeLightR.visible = true;
