@@ -181,7 +181,7 @@ export class Car {
 
 	}
 }
-
+/*
 export class Obstacle {
 	constructor(pos, size, texture) {
 		this.center = pos;
@@ -217,6 +217,21 @@ export class Obstacle {
 		this.mesh.rotation.y = angle;
 	}
 	
+	calculateCloseDistance(obbB){
+		let obbA = this;
+		
+		var min = [
+			{dis:obbB.calculateDistance(obbA.mesh.localToWorld(new THREE.Vector3(obbA.size[0], 0, obbA.size[2]))), dir:'xz'},
+			{dis:obbB.calculateDistance(obbA.mesh.localToWorld(new THREE.Vector3(obbA.size[0], 0, -obbA.size[2]))), dir:'x-z'},
+			{dis:obbB.calculateDistance(obbA.mesh.localToWorld(new THREE.Vector3(-obbA.size[0], 0, -obbA.size[2]))), dir:'-x-z'},
+			{dis:obbB.calculateDistance(obbA.mesh.localToWorld(new THREE.Vector3(-obbA.size[0], 0, obbA.size[2]))), dir:'-xz'},
+			{dis:obbB.calculateDistance(obbA.c[1]), dir:'back'},
+			{dis:obbB.calculateDistance(obbA.c[0]), dir:'front'}
+		];
+		
+		return min;
+	}
+
 	calculateDistance(pointB) {
 		// four axes to check
 		let obbA = this;
@@ -338,6 +353,7 @@ export class ObstacleCar {
 
 	}
 }
+*/
 
 export function buildCar(pos) {
     let loader = new THREE.TextureLoader();
@@ -345,53 +361,53 @@ export function buildCar(pos) {
   
     var materialArray = [];
     materialArray.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/iRrkNU7.png'),
+		map: loader.load ('./pictures/iRrkNU7.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/m8OcKV5.png'),
+		map: loader.load ('./pictures/m8OcKV5.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/vjq6Rm5.png'),
+		map: loader.load ('./pictures/vjq6Rm5.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/vjq6Rm5.png'),
+		map: loader.load ('./pictures/vjq6Rm5.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/BbC4LNk.png'),
+		map: loader.load ('./pictures/BbC4LNk.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/BbC4LNk.png'),
+		map: loader.load ('./pictures/BbC4LNk.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
 	
 	var materialArray2 = [];
     materialArray2.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/JMN31Pd.png'),
+		map: loader.load ('./pictures/JMN31Pd.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray2.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/E6Aa12z.png'),
+		map: loader.load ('./pictures/E6Aa12z.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray2.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/bBnU4nu.png'),
+		map: loader.load ('./pictures/bBnU4nu.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray2.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/bBnU4nu.png'),
+		map: loader.load ('./pictures/bBnU4nu.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray2.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/E3Z6EF9.png'),
+		map: loader.load ('./pictures/E3Z6EF9.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
     materialArray2.push(new THREE.MeshLambertMaterial({
-		map: loader.load ('https://i.imgur.com/E3Z6EF9.png'),
+		map: loader.load ('./pictures/E3Z6EF9.png'),
 		transparent: true, opacity: 0.7, side: THREE.DoubleSide, alphaTest: 0.5
 	}));
   
@@ -399,7 +415,7 @@ export function buildCar(pos) {
     let wheelMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side:THREE.DoubleSide});
     let circle = new THREE.Mesh(new THREE.CircleGeometry(5, 32), 
 								new THREE.MeshBasicMaterial({
-									map: loader.load ('https://i.imgur.com/ZeYqhuv.png'), 
+									map: loader.load ('./pictures/ZeYqhuv.png'), 
 									transparent: true, 
 									side:THREE.DoubleSide
 								}));
@@ -418,7 +434,7 @@ export function buildCar(pos) {
 	
 	//mapArrow
 	var arrowMesh = new THREE.Mesh(new THREE.PlaneGeometry(70, 70), new THREE.MeshBasicMaterial({
-																		map: loader.load('https://i.imgur.com/1wmEVdS.png'),
+																		map: loader.load('./pictures/1wmEVdS.png'),
 																		alphaTest: 0.5,
 																		side: THREE.DoubleSide
 																	}));
@@ -430,7 +446,7 @@ export function buildCar(pos) {
 	
 	//brakeLight
 	var brakeLight = new THREE.Mesh(new THREE.CircleGeometry(1.3, 32), new THREE.MeshBasicMaterial({
-																		map: loader.load('https://i.imgur.com/CrbaIo1.png'),
+																		map: loader.load('./pictures/CrbaIo1.png'),
 																		alphaTest: 0.5,
 																		side: THREE.DoubleSide
 																	}));
@@ -438,13 +454,13 @@ export function buildCar(pos) {
 	
 	//turnSignal
 	var turnSignalR = new THREE.Mesh(new THREE.RingGeometry(1.3, 2, 32, 8, Math.PI, Math.PI), new THREE.MeshBasicMaterial({
-																		map: loader.load('https://i.imgur.com/CrbaIo1.png'),
+																		map: loader.load('./pictures/CrbaIo1.png'),
 																		alphaTest: 0.5,
 																		side: THREE.DoubleSide
 																	}));
 	turnSignalR.rotation.y = Math.PI/2;
 	var turnSignalL = new THREE.Mesh(new THREE.RingGeometry(1.3, 2, 32, 8, Math.PI, Math.PI), new THREE.MeshBasicMaterial({
-																		map: loader.load('https://i.imgur.com/CrbaIo1.png'),
+																		map: loader.load('./pictures/CrbaIo1.png'),
 																		alphaTest: 0.5,
 																		side: THREE.DoubleSide
 																	}));
@@ -452,7 +468,7 @@ export function buildCar(pos) {
 	
 	//backUpLight
 	var backUpLight = new THREE.Mesh(new THREE.RingGeometry(1.3, 2, 32, 8, 0, Math.PI), new THREE.MeshBasicMaterial({
-																		map: loader.load('https://i.imgur.com/CrbaIo1.png'),
+																		map: loader.load('./pictures/CrbaIo1.png'),
 																		alphaTest: 0.5,
 																		side: THREE.DoubleSide
 																	}));
@@ -667,6 +683,66 @@ export function revLine(){
 	traceMeshesBlue.push (traceMesh1.clone());
 
 	scene.add (traceMeshesBlue[0]);
+}
+
+export class buildSidewalks{
+	constructor(pos, size) {
+
+		this.center = pos;
+		this.size = size;// array of halfwidth's
+		/*
+		var extrudeSettings = {
+			steps: 1,
+			depth: 50,
+			bevelEnabled: false,
+		};*/
+		this.mesh = new THREE.Mesh(new THREE.BoxGeometry(size[0] * 2, size[1] * 2, size[2] * 2), new THREE.MeshLambertMaterial({
+			color:0x000000,
+			transparent:true,
+			opacity:0
+		}));
+		this.mesh.rotation.x = Math.PI/2;
+		this.mesh.position.y = 2;
+		this.mesh.position.copy(pos);
+				
+		scene.add(this.mesh);
+		
+		this.rotate(0); // set initial axes
+	}
+
+	rotate(angle) {
+		this.angle = angle;
+
+		let yAxis = new THREE.Vector3(0, 1, 0);
+		this.axes = [];
+		this.axes[0] = (new THREE.Vector3(1, 0, 0)).applyAxisAngle(yAxis, angle);
+		this.axes[1] = (new THREE.Vector3(0, 0, 1)).applyAxisAngle(yAxis, angle);
+		this.mesh.rotation.y = angle;
+	}
+
+	intersect(obbB) {
+		// four axes to check
+		let obbA = this;
+		let sepAxes = [];
+		sepAxes[0] = obbA.axes[0];
+		sepAxes[1] = obbA.axes[1];
+		sepAxes[2] = obbB.axes[0];
+		sepAxes[3] = obbB.axes[1];
+
+		let t = obbB.center.clone().sub(obbA.center);
+		for (let i = 0; i < 4; i++) {
+			let sHat = sepAxes[i];
+			let centerDis = Math.abs(t.dot(sHat));
+
+			let dA = obbA.size[0] * Math.abs(obbA.axes[0].dot(sHat)) 
+					+ obbA.size[1] * Math.abs(obbA.axes[1].dot(sHat));
+			let dB = obbB.size[0] * Math.abs(obbB.axes[0].dot(sHat)) 
+					+ obbB.size[1] * Math.abs(obbB.axes[1].dot(sHat));
+			if (centerDis > dA + dB)
+				return false;  // NOT intersect
+		}
+		return true;  // intersect
+	}	
 }
 
 export { traceMeshes, traceMeshesBlue };

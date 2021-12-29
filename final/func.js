@@ -111,9 +111,9 @@ export function loadCubemap() {
     	path + 'posz' + format, path + 'negz' + format
   	];*/
 	var urls = [
-    	"https://i.imgur.com/k0C89rK.jpg", "https://i.imgur.com/fxNB9KL.jpg",
-    	"https://i.imgur.com/Bwaz4mn.jpg", "https://i.imgur.com/uJyMINd.jpg",
-    	"https://i.imgur.com/MVQ1xKl.jpg", "https://i.imgur.com/Cahat7o.jpg"
+    	"./pictures/k0C89rK.jpg", "./pictures/fxNB9KL.jpg",
+    	"./pictures/Bwaz4mn.jpg", "./pictures/uJyMINd.jpg",
+    	"./pictures/MVQ1xKl.jpg", "./pictures/Cahat7o.jpg"
   	];
 	
   	var loader = new THREE.CubeTextureLoader();
@@ -132,9 +132,9 @@ export function reversingLine(RC){
 	  	// RCmesh.position.x = icx;
 		
 		// rear bumpter center
-		let rbc = car.mesh.localToWorld(new THREE.Vector3(-20, 0, 0));
-		let rbr = car.mesh.localToWorld(new THREE.Vector3(-20, 0, 10));
-		let rbl = car.mesh.localToWorld(new THREE.Vector3(-20, 0, -10));
+		let rbc = car.mesh.localToWorld(new THREE.Vector3(-15, 0, 0));
+		let rbr = car.mesh.localToWorld(new THREE.Vector3(-15, 0, 10));
+		let rbl = car.mesh.localToWorld(new THREE.Vector3(-15, 0, -10));
 		  
 		  // compute R
 	  

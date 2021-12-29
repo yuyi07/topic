@@ -1,5 +1,5 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
-import {buildCar, ObstacleCar, revLine} from "./buildThings.js";
+import {buildCar, revLine} from "./buildThings.js";
 import {firstPV} from "./func.js";
 import {cameraUpdate, treesLootAt, treesVisible, loadCubemap, reversingLine, reversingLineVisible} from "./func.js";
 import {onPointerDown} from "./buttonFunc.js";
