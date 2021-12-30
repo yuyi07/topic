@@ -35,7 +35,7 @@ export function cameraUpdate(fSlowDown, bSlowDown){
 		camera.lookAt(tmp);
 		
 		if(car.speed < 0){
-			let carEnd = car.mesh.localToWorld (new THREE.Vector3 (-19,1,0));
+			let carEnd = car.mesh.localToWorld (new THREE.Vector3 (-10,1,0));
 			reversingCamera.position.copy (carEnd);
 			carEnd = car.mesh.localToWorld (new THREE.Vector3(-23, -2, 0));
 			reversingCamera.lookAt(carEnd);
@@ -133,8 +133,8 @@ export function reversingLine(RC){
 		
 		// rear bumpter center
 		let rbc = car.mesh.localToWorld(new THREE.Vector3(-15, 0, 0));
-		let rbr = car.mesh.localToWorld(new THREE.Vector3(-15, 0, 10));
-		let rbl = car.mesh.localToWorld(new THREE.Vector3(-15, 0, -10));
+		let rbr = car.mesh.localToWorld(new THREE.Vector3(-15, 0, 11));
+		let rbl = car.mesh.localToWorld(new THREE.Vector3(-15, 0, -11));
 		  
 		  // compute R
 	  

@@ -629,8 +629,8 @@ export function revLine(){
 
 	let len = 2;
 	for (let i = 0; i < len; i++) {
-		positions.push(-10, -10, -10);
-		positions.push(-10, -10, 10);
+		positions.push(-8, -10, -10);
+		positions.push(-8, -10, 10);
 	
 	}
 	var geometry = new LineGeometry();
@@ -742,7 +742,8 @@ export class buildSidewalks{
 				return false;  // NOT intersect
 		}
 		return true;  // intersect
-	}	
+	}
+		
 }
 
 export { traceMeshes, traceMeshesBlue };

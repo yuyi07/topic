@@ -275,13 +275,13 @@ function buildScenes(){
 
 /////////////////////////////////////////   building   //////////////////////////////////////////////////
 
-	let building1 = new buildSidewalks(new THREE.Vector3(205.5, 1, -215),[62, 148.5, 2]);
+	let building1 = new buildSidewalks(new THREE.Vector3(205.5, 1, -215),[60, 148.5, 2]);
 
-	let building2 = new buildSidewalks(new THREE.Vector3(205.5, 1, 215),[62, 148.5, 2]);
+	let building2 = new buildSidewalks(new THREE.Vector3(205.5, 1, 215),[60, 148.5, 2]);
 
-	let building3 = new buildSidewalks(new THREE.Vector3(-122.5, 1, 300),[140.5, 63, 2]);
+	let building3 = new buildSidewalks(new THREE.Vector3(-122.5, 1, 300),[140.5, 61, 2]);
 
-	let building4 = new buildSidewalks(new THREE.Vector3(-122.5, 1, 122),[138.5, 56, 2]);
+	let building4 = new buildSidewalks(new THREE.Vector3(-122.5, 1, 122),[138.5, 54, 2]);
 
 	obstacles.push(building1, building2, building3, building4);
 

@@ -74,16 +74,13 @@ export function init() {
 	thirdPVCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-30,18,0)));
 		
 	//Reversing camera
-    reversingCamera = new THREE.OrthographicCamera(-window.innerWidth/52, window.innerWidth/52
-												, window.innerHeight/48, -window.innerHeight/48, 0.1, 1000);
+    reversingCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
     reversingCamera.position.set(-60, 23, 40);
 	
-	//GPSCamera
-    GPSCamera = new THREE.OrthographicCamera(-window.innerWidth/6.5, window.innerWidth/6.5
-											, window.innerHeight/6, -window.innerHeight/6, 1, 1000);
+//GPSCamera
+    GPSCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
     GPSCamera.lookAt (car.mesh.localToWorld (new THREE.Vector3(50,0,0)));
 	GPSCamera.position.copy (car.mesh.localToWorld (new THREE.Vector3 (-60,200,0)));
-
 	
 	//sound
 	radarSound = document.getElementById('radarSound');
